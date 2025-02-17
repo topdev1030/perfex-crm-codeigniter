@@ -261,6 +261,30 @@ $lang['invoice_item_add_edit_rate'] = 'Tarifa';
 $lang['invoice_item_edit_heading'] = 'Editar o Item';
 $lang['invoice_item_add_heading'] = 'Adicionar Novo Item';
 
+// Vigilantes
+$lang['vigilantes'] = 'Vigilantes';
+$lang['vigilante'] = 'Vigilante';
+$lang['vigilante_cnv_number'] = 'Número CNV';
+$lang['vigilante_cnv_expiry'] = 'Data de Validade CNV';
+$lang['vigilante_current_post'] = 'Posto Atual';
+$lang['vigilante_cnv_details'] = 'Detalhes do CNV';
+$lang['vigilante_post_assignment'] = 'Atribuição de Posto';
+
+// Vehicles
+$lang['regulation_vehicles'] = 'Veículos';
+$lang['new_vehicle'] = 'Novo Veículo';
+$lang['vehicle_name'] = 'Nome';
+$lang['vehicle_model'] = 'Modelo';
+$lang['vehicle_plate'] = 'Placa';
+$lang['vehicle_registration_expiry'] = 'Vencimento do Registro';
+$lang['current_post'] = 'Posto Atual';
+$lang['vehicle_status'] = 'Status';
+$lang['not_assigned'] = 'Não Atribuído';
+$lang['assign_vehicle_to_post'] = 'Atribuir Veículo ao Posto';
+$lang['vehicle_assigned_successfully'] = 'Veículo atribuído com sucesso';
+$lang['select_post'] = 'Selecionar Posto';
+$lang['service_post'] = 'Posto de Serviço';
+
 # Invoices
 $lang['invoices'] = 'Faturas';
 $lang['invoice'] = 'Fatura';
@@ -605,12 +629,12 @@ $lang['als_activity_log_submenu'] = 'Registro de Atividade';
 # Regulation Submenus
 $lang['als_regulation'] = 'Regulamentação';
 $lang['als_weapons_list_submenu'] = 'Relação de Armas';
-$lang['als_vests_list_submenu'] = 'Relação de Coletes';
-$lang['als_non_lethal_equipment_submenu'] = 'Equipamentos Controlados';
-$lang['als_vigilantes_submenu'] = 'Vigilantes';
-$lang['als_vehicles_submenu'] = 'Veículos';
-$lang['als_ongoing_processes_submenu'] = 'Processos em Andamento';
-$lang['als_incident_records_submenu'] = 'Livro de Ocorrências';
+// $lang['als_vests_list_submenu'] = 'Relação de Coletes';
+// $lang['als_non_lethal_equipment_submenu'] = 'Equipamentos Controlados';
+// $lang['als_vigilantes_submenu'] = 'Vigilantes';
+// $lang['als_vehicles_submenu'] = 'Veículos';
+// $lang['als_ongoing_processes_submenu'] = 'Processos em Andamento';
+// $lang['als_incident_records_submenu'] = 'Livro de Ocorrências';
 $lang['als_diagnostics_submenu'] = 'Diagnóstico';
 $lang['als_reports_submenu'] = 'Relatórios';
 

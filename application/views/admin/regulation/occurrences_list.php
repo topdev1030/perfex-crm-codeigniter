@@ -33,7 +33,7 @@
                   <tr>
                     <td><?php echo _dt($occurrence['occurrence_date']); ?></td>
                     <td><?php echo $occurrence['occurrence_type']; ?></td>
-                    <td><?php echo $occurrence['station_id']; ?></td>
+                    <td><?php echo $occurrence['post_id']; ?></td>
                     <td><?php echo _l('occurrence_status_' . $occurrence['status']); ?></td>
                     <td><?php echo $occurrence['firstname'] . ' ' . $occurrence['lastname']; ?></td>
                     <td>

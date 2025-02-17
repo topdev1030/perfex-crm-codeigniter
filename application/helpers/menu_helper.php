@@ -614,22 +614,40 @@ function app_init_admin_sidebar_menu_items()
     // ]);
 
     // Vigilantes
+    // $CI->app_menu->add_sidebar_children_item('regulation', [
+    //     'slug' => 'vigilantes',
+    //     'name' => _l('als_vigilantes_submenu'),
+    //     'href' => admin_url('regulation/vigilantes'),
+    //     'position' => 20,
+    //     'badge' => [],
+    // ]);
+
+    // Add this after your other regulation menu items
     $CI->app_menu->add_sidebar_children_item('regulation', [
         'slug' => 'vigilantes',
-        'name' => _l('als_vigilantes_submenu'),
+        'name' => _l('vigilantes'),
         'href' => admin_url('regulation/vigilantes'),
-        'position' => 20,
+        'position' => 14,
+        'badge' => [],
+    ]);
+
+    // Add this with your other regulation menu items
+    $CI->app_menu->add_sidebar_children_item('regulation', [
+        'slug' => 'vehicles-list',
+        'name' => _l('regulation_vehicles'),
+        'href' => admin_url('regulation/vehicles_list'),
+        'position' => 15,
         'badge' => [],
     ]);
 
     // Vehicles
-    $CI->app_menu->add_sidebar_children_item('regulation', [
-        'slug' => 'vehicles',
-        'name' => _l('als_vehicles_submenu'),
-        'href' => admin_url('regulation/vehicles'),
-        'position' => 25,
-        'badge' => [],
-    ]);
+    // $CI->app_menu->add_sidebar_children_item('regulation', [
+    //     'slug' => 'vehicles',
+    //     'name' => _l('als_vehicles_submenu'),
+    //     'href' => admin_url('regulation/vehicles'),
+    //     'position' => 25,
+    //     'badge' => [],
+    // ]);
 
     // Ongoing Processes
     // $CI->app_menu->add_sidebar_children_item('regulation', [
@@ -641,13 +659,13 @@ function app_init_admin_sidebar_menu_items()
     // ]);
 
     // Incident Records
-    $CI->app_menu->add_sidebar_children_item('regulation', [
-        'slug' => 'incident-records',
-        'name' => _l('als_incident_records_submenu'),
-        'href' => admin_url('regulation/incident_records'),
-        'position' => 35,
-        'badge' => [],
-    ]);
+    // $CI->app_menu->add_sidebar_children_item('regulation', [
+    //     'slug' => 'incident-records',
+    //     'name' => _l('als_incident_records_submenu'),
+    //     'href' => admin_url('regulation/incident_records'),
+    //     'position' => 35,
+    //     'badge' => [],
+    // ]);
 
     // Diagnostics
     $CI->app_menu->add_sidebar_children_item('regulation', [
@@ -689,7 +707,7 @@ function app_init_admin_sidebar_menu_items()
     $CI->app_menu->add_sidebar_children_item('regulation', [
         'slug' => 'occurrences-list',
         'name' => _l('als_occurrences_list'),
-        'href' => admin_url('regulation/incident_records'),
+        'href' => admin_url('regulation/occurrences_list'),
         'position' => 13,
         'badge' => [],
     ]);

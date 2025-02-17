@@ -9,6 +9,7 @@ class Regulation extends AdminController
     parent::__construct();
     $this->load->model('vests_model');
     $this->load->model('controlled_equipment_model');
+    $this->load->model('vehicles_model');
   }
 
   /* List all vests */
@@ -323,5 +324,92 @@ class Regulation extends AdminController
     }
 
     redirect(admin_url('regulation/occurrences_list'));
+  }
+
+  public function vigilantes()
+  {
+    if (!has_permission('regulation', '', 'view')) {
+      access_denied('regulation');
+    }
+
+    $this->load->model('vigilantes_model');
+
+    $data['title'] = _l('vigilantes');
+    $data['vigilantes'] = $this->vigilantes_model->get_all_vigilantes();
+
+    $this->load->view('admin/regulation/vigilantes', $data);
+  }
+
+  public function vigilante($id)
+  {
+    if (!has_permission('regulation', '', 'edit')) {
+      ajax_access_denied();
+    }
+
+    $this->load->model('vigilantes_model');
+
+    if ($this->input->post()) {
+      $data = $this->input->post();
+
+      // Update CNV details
+      $cnv_data = [
+        'cnv_number' => $data['cnv_number'],
+        'expiry_date' => $data['cnv_expiry']
+      ];
+      $success = $this->vigilantes_model->update_cnv($id, $cnv_data);
+
+      // Update post assignment if changed
+      if (isset($data['post_id']) && $data['post_id'] !== '') {
+        $this->vigilantes_model->update_post_assignment($id, $data['post_id']);
+      }
+
+      if ($success) {
+        set_alert('success', _l('updated_successfully', _l('vigilante')));
+      }
+
+      redirect(admin_url('regulation/vigilantes'));
+    }
+
+    $data['vigilante'] = $this->vigilantes_model->get_vigilante($id);
+    $data['posts'] = $this->vigilantes_model->get_active_posts();
+    $data['title'] = $data['vigilante']['firstname'] . ' ' . $data['vigilante']['lastname'];
+
+    $this->load->view('admin/regulation/vigilante', $data);
+  }
+
+  public function vehicles_list()
+  {
+    if (!has_permission('regulation', '', 'view')) {
+      access_denied('regulation');
+    }
+
+    $data['title'] = _l('regulation_vehicles');
+    $data['vehicles'] = $this->vehicles_model->get_all_vehicles();
+
+    $this->load->view('admin/regulation/vehicles_list', $data);
+  }
+
+  public function assign_vehicle($id = '')
+  {
+    if (!has_permission('regulation', '', 'edit')) {
+      ajax_access_denied();
+    }
+
+    if ($this->input->post()) {
+      $data = $this->input->post();
+
+      $success = $this->vehicles_model->assign_to_post($data);
+      if ($success) {
+        set_alert('success', _l('vehicle_assigned_successfully'));
+      }
+
+      redirect(admin_url('regulation/vehicles_list'));
+    }
+
+    $data['vehicle'] = $this->vehicles_model->get_vehicle($id);
+    $data['posts'] = $this->vehicles_model->get_active_posts();
+    $data['title'] = _l('assign_vehicle_to_post');
+
+    $this->load->view('admin/regulation/assign_vehicle', $data);
   }
 }

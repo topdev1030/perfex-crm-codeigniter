@@ -3963,11 +3963,11 @@ $lang['welcome_back_sign_in'] = 'Welcome, please sign in to your dashboard';
 $lang['als_regulation'] = 'Regulation';
 $lang['als_weapons_list_submenu'] = 'Weapons List';
 $lang['als_vests_list_submenu'] = 'Vests List';
-$lang['als_non_lethal_equipment_submenu'] = 'Non-Lethal Equipment';
-$lang['als_vigilantes_submenu'] = 'Vigilantes';
-$lang['als_vehicles_submenu'] = 'Vehicles';
-$lang['als_ongoing_processes_submenu'] = 'Ongoing Processes';
-$lang['als_incident_records_submenu'] = 'Incident Records';
+// $lang['als_non_lethal_equipment_submenu'] = 'Non-Lethal Equipment';
+// $lang['als_vigilantes_submenu'] = 'Vigilantes';
+// $lang['als_vehicles_submenu'] = 'Vehicles';
+// $lang['als_ongoing_processes_submenu'] = 'Ongoing Processes';
+// $lang['als_incident_records_submenu'] = 'Incident Records';
 $lang['als_diagnostics_submenu'] = 'Diagnostics';
 $lang['als_reports_submenu'] = 'Reports';
 
@@ -3988,7 +3988,7 @@ $lang['vest_status_inactive'] = 'Inactive';
 $lang['vest_status_maintenance'] = 'Maintenance';
 
 // Controlled Equipment
-$lang['als_controlled_equipment_list'] = 'Controlled Equipment';
+$lang['als_controlled_equipment_list'] = 'Non-Lethal Equipment';
 $lang['new_equipment'] = 'New Equipment';
 $lang['equipment'] = 'Equipment';
 $lang['equipment_lowercase'] = 'equipment';
@@ -4004,7 +4004,7 @@ $lang['equipment_status_inactive'] = 'Inactive';
 $lang['equipment_status_maintenance'] = 'Maintenance';
 
 // Processes
-$lang['als_processes_list'] = 'Processes';
+$lang['als_processes_list'] = 'Ongoing Processes';
 $lang['new_process'] = 'New Process';
 $lang['process'] = 'Process';
 $lang['process_lowercase'] = 'process';
@@ -4022,8 +4022,8 @@ $lang['process_status_completed'] = 'Completed';
 $lang['process_status_cancelled'] = 'Cancelled';
 
 // Occurrences
-$lang['als_occurrences_list'] = 'Occurrences';
-$lang['new_occurrence'] = 'New Occurrence';
+$lang['als_occurrences_list'] = 'Incident Records';
+$lang['new_occurrence'] = 'New Incident Record';
 $lang['occurrence'] = 'Occurrence';
 $lang['occurrence_lowercase'] = 'occurrence';
 $lang['occurrence_date'] = 'Date';
@@ -4037,3 +4037,27 @@ $lang['occurrence_created_by'] = 'Created By';
 $lang['occurrence_status_registered'] = 'Registered';
 $lang['occurrence_status_under_investigation'] = 'Under Investigation';
 $lang['occurrence_status_completed'] = 'Completed';
+
+// Vigilantes
+$lang['vigilantes'] = 'Vigilantes';
+$lang['vigilante'] = 'Vigilante';
+$lang['vigilante_cnv_number'] = 'CNV Number';
+$lang['vigilante_cnv_expiry'] = 'CNV Expiry Date';
+$lang['vigilante_current_post'] = 'Current Post';
+$lang['vigilante_cnv_details'] = 'CNV Details';
+$lang['vigilante_post_assignment'] = 'Post Assignment';
+
+// Vehicles
+$lang['regulation_vehicles'] = 'Vehicles';
+$lang['new_vehicle'] = 'New Vehicle';
+$lang['vehicle_name'] = 'Name';
+$lang['vehicle_model'] = 'Model';
+$lang['vehicle_plate'] = 'License Plate';
+$lang['vehicle_registration_expiry'] = 'Registration Expiry';
+$lang['current_post'] = 'Current Post';
+$lang['vehicle_status'] = 'Status';
+$lang['not_assigned'] = 'Not Assigned';
+$lang['assign_vehicle_to_post'] = 'Assign Vehicle to Post';
+$lang['vehicle_assigned_successfully'] = 'Vehicle assigned successfully';
+$lang['select_post'] = 'Select Post';
+$lang['service_post'] = 'Service Post';

@@ -3352,10 +3352,170 @@ CREATE TABLE `tblweb_to_lead` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `tblregulation_vests`
---
+-- --
+-- -- Table structure for table `tblregulation_vests`
+-- --
 
+-- CREATE TABLE `tblregulation_vests` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `serial_number` varchar(50) NOT NULL,
+--     `manufacturer` varchar(100) NOT NULL,
+--     `protection_level` varchar(20) NOT NULL,
+--     `manufacturing_date` date NOT NULL,
+--     `expiry_date` date NOT NULL,
+--     `status` enum('active', 'inactive', 'maintenance') DEFAULT 'active',
+--     `station_id` int NULL, -- FK to service stations
+--     `notes` text,
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
+--     `created_by` int NOT NULL -- FK to staff
+-- );
+
+
+-- -- --------------------------------------------------------
+
+-- --
+-- -- Table structure for table `tblregulation_controlled_equipment`
+-- --
+-- --
+
+-- CREATE TABLE `tblregulation_controlled_equipment` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `type` varchar(50) NOT NULL, -- e.g., "Taser", "Spray", etc.
+--     `serial_number` varchar(50) NOT NULL,
+--     `model` varchar(100) NOT NULL,
+--     `acquisition_date` date NOT NULL,
+--     `expiry_date` date NULL,
+--     `status` enum('active', 'inactive', 'maintenance') DEFAULT 'active',
+--     `station_id` int NULL, -- FK to service stations
+--     `notes` text,
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
+--     `created_by` int NOT NULL -- FK to staff
+-- );
+
+-- -- --------------------------------------------------------
+
+-- --
+-- -- Table structure for table `tblregulation_processes`
+-- --
+-- --
+
+-- CREATE TABLE `tblregulation_processes` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `process_type` varchar(100) NOT NULL, -- e.g., "CNV Renewal", "Weapon Renewal"
+--     `process_number` varchar(50) NOT NULL,
+--     `status` enum('pending', 'in_progress', 'completed', 'cancelled') DEFAULT 'pending',
+--     `start_date` date NOT NULL,
+--     `expected_date` date NOT NULL,
+--     `completion_date` date NULL,
+--     `responsible_id` int NOT NULL, -- FK to staff
+--     `related_item_type` varchar(50) NULL, -- e.g., "vest", "weapon", "guard"
+--     `related_item_id` int NULL,
+--     `description` text,
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
+-- );
+
+-- -- --------------------------------------------------------
+
+-- --
+-- -- Table structure for table `tblregulation_book_of_occurrences`
+-- --
+-- --
+
+-- CREATE TABLE `tblregulation_occurrences` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `station_id` int NOT NULL, -- FK to service stations
+--     `occurrence_date` datetime NOT NULL,
+--     `occurrence_type` varchar(100) NOT NULL,
+--     `description` text NOT NULL,
+--     `involved_guards` text NULL, -- Stored as JSON with staff IDs
+--     `involved_equipment` text NULL, -- Stored as JSON with equipment IDs
+--     `status` enum('registered', 'under_investigation', 'completed') DEFAULT 'registered',
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--     `created_by` int NOT NULL, -- FK to staff
+--     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
+-- );
+
+-- -- --------------------------------------------------------
+
+-- --
+-- -- Table structure for table `tblregulation_stations`
+-- --
+-- --
+
+-- CREATE TABLE `tblregulation_stations` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `name` varchar(200) NOT NULL,
+--     `address` text NOT NULL,
+--     `client_id` int NULL, -- FK to clients
+--     `status` enum('active', 'inactive') DEFAULT 'active',
+--     `supervisor_id` int NULL, -- FK to staff
+--     `operating_hours` varchar(100) NULL,
+--     `notes` text,
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
+-- );
+
+-- -- --------------------------------------------------------
+
+-- --
+-- -- Table structure for table `tblregulation_links`
+-- --
+-- --
+
+-- CREATE TABLE `tblregulation_links` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `item_type` varchar(50) NOT NULL, -- e.g., "vest", "weapon", "equipment"
+--     `item_id` int NOT NULL,
+--     `station_id` int NOT NULL, -- FK to service stations
+--     `start_date` datetime NOT NULL,
+--     `end_date` datetime NULL,
+--     `link_reason` varchar(200) NULL,
+--     `authorized_by` int NOT NULL, -- FK to staff
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- -- --------------------------------------------------------
+
+-- --
+-- -- Table structure for table `tblregulation_movements`
+-- --
+-- --
+
+-- CREATE TABLE `tblregulation_movements` (
+--     `id` int PRIMARY KEY AUTO_INCREMENT,
+--     `item_type` varchar(50) NOT NULL,
+--     `item_id` int NOT NULL,
+--     `origin_station_id` int NULL, -- FK to service stations
+--     `destination_station_id` int NULL, -- FK to service stations
+--     `movement_date` datetime NOT NULL,
+--     `movement_type` enum('entry', 'exit', 'transfer') NOT NULL,
+--     `reason` text NOT NULL,
+--     `authorized_by` int NOT NULL, -- FK to staff
+--     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- Service Posts Table
+CREATE TABLE `tblregulation_posts` (
+    `id` int PRIMARY KEY AUTO_INCREMENT,
+    `name` varchar(150) NOT NULL,
+    `address` text NOT NULL,
+    `city` varchar(100) NOT NULL,
+    `state` varchar(50) NOT NULL,
+    `postal_code` varchar(20) NOT NULL,
+    `contact_person` varchar(100) NULL,
+    `contact_phone` varchar(20) NULL,
+    `status` enum('active', 'inactive') DEFAULT 'active',
+    `notes` text,
+    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `created_by` int NOT NULL, -- FK to staff
+    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Vests Table
 CREATE TABLE `tblregulation_vests` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
     `serial_number` varchar(50) NOT NULL,
@@ -3364,21 +3524,13 @@ CREATE TABLE `tblregulation_vests` (
     `manufacturing_date` date NOT NULL,
     `expiry_date` date NOT NULL,
     `status` enum('active', 'inactive', 'maintenance') DEFAULT 'active',
-    `station_id` int NULL, -- FK to service stations
     `notes` text,
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
-    `created_by` int NOT NULL -- FK to staff
+    `created_by` int NOT NULL, -- FK to staff
+    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblregulation_controlled_equipment`
---
---
-
+-- Controlled Equipment Table
 CREATE TABLE `tblregulation_controlled_equipment` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
     `type` varchar(50) NOT NULL, -- e.g., "Taser", "Spray", etc.
@@ -3387,20 +3539,13 @@ CREATE TABLE `tblregulation_controlled_equipment` (
     `acquisition_date` date NOT NULL,
     `expiry_date` date NULL,
     `status` enum('active', 'inactive', 'maintenance') DEFAULT 'active',
-    `station_id` int NULL, -- FK to service stations
     `notes` text,
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
-    `created_by` int NOT NULL -- FK to staff
+    `created_by` int NOT NULL, -- FK to staff
+    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tblregulation_processes`
---
---
-
+-- Processes Table
 CREATE TABLE `tblregulation_processes` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
     `process_type` varchar(100) NOT NULL, -- e.g., "CNV Renewal", "Weapon Renewal"
@@ -3417,16 +3562,10 @@ CREATE TABLE `tblregulation_processes` (
     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tblregulation_book_of_occurrences`
---
---
-
+-- Occurrences (Incident Records) Table
 CREATE TABLE `tblregulation_occurrences` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
-    `station_id` int NOT NULL, -- FK to service stations
+    `post_id` int NOT NULL, -- FK to regulation_posts
     `occurrence_date` datetime NOT NULL,
     `occurrence_type` varchar(100) NOT NULL,
     `description` text NOT NULL,
@@ -3438,64 +3577,47 @@ CREATE TABLE `tblregulation_occurrences` (
     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tblregulation_stations`
---
---
-
-CREATE TABLE `tblregulation_stations` (
-    `id` int PRIMARY KEY AUTO_INCREMENT,
-    `name` varchar(200) NOT NULL,
-    `address` text NOT NULL,
-    `client_id` int NULL, -- FK to clients
-    `status` enum('active', 'inactive') DEFAULT 'active',
-    `supervisor_id` int NULL, -- FK to staff
-    `operating_hours` varchar(100) NULL,
-    `notes` text,
-    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblregulation_links`
---
---
-
-CREATE TABLE `tblregulation_links` (
+-- Item Post Links Table (for tracking item assignments to posts)
+CREATE TABLE `tblregulation_item_post_links` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
     `item_type` varchar(50) NOT NULL, -- e.g., "vest", "weapon", "equipment"
     `item_id` int NOT NULL,
-    `station_id` int NOT NULL, -- FK to service stations
-    `start_date` datetime NOT NULL,
-    `end_date` datetime NULL,
-    `link_reason` varchar(200) NULL,
-    `authorized_by` int NOT NULL, -- FK to staff
-    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+    `post_id` int NOT NULL, -- FK to regulation_posts
+    `assigned_date` datetime NOT NULL,
+    `removed_date` datetime NULL,
+    `status` enum('active', 'inactive') DEFAULT 'active',
+    `notes` text,
+    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `created_by` int NOT NULL, -- FK to staff
+    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tblregulation_movements`
---
---
-
-CREATE TABLE `tblregulation_movements` (
+CREATE TABLE IF NOT EXISTS `tblstaff_cnv` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
-    `item_type` varchar(50) NOT NULL,
-    `item_id` int NOT NULL,
-    `origin_station_id` int NULL, -- FK to service stations
-    `destination_station_id` int NULL, -- FK to service stations
-    `movement_date` datetime NOT NULL,
-    `movement_type` enum('entry', 'exit', 'transfer') NOT NULL,
-    `reason` text NOT NULL,
-    `authorized_by` int NOT NULL, -- FK to staff
-    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+    `staff_id` int NOT NULL,
+    `cnv_number` varchar(50) NOT NULL,
+    `expiry_date` date NOT NULL,
+    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY `unique_staff_cnv` (`staff_id`)
 );
+
+-- Add Foreign Key Constraints
+ALTER TABLE `tblregulation_occurrences`
+    ADD CONSTRAINT `fk_occurrence_post` FOREIGN KEY (`post_id`) 
+    REFERENCES `tblregulation_posts` (`id`) ON DELETE RESTRICT;
+
+ALTER TABLE `tblregulation_item_post_links`
+    ADD CONSTRAINT `fk_item_link_post` FOREIGN KEY (`post_id`) 
+    REFERENCES `tblregulation_posts` (`id`) ON DELETE RESTRICT;
+
+-- Indexes for better performance
+CREATE INDEX `idx_vest_serial` ON `tblregulation_vests` (`serial_number`);
+CREATE INDEX `idx_equipment_serial` ON `tblregulation_controlled_equipment` (`serial_number`);
+CREATE INDEX `idx_process_number` ON `tblregulation_processes` (`process_number`);
+CREATE INDEX `idx_occurrence_date` ON `tblregulation_occurrences` (`occurrence_date`);
+CREATE INDEX `idx_item_link_type` ON `tblregulation_item_post_links` (`item_type`, `item_id`);
+
 -- Indexes for dumped tables
 --
 

@@ -12,10 +12,10 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="station_id"><?php echo _l('occurrence_station'); ?></label>
-              <select class="form-control selectpicker" name="station_id" required data-live-search="true">
+              <label for="post_id"><?php echo _l('occurrence_station'); ?></label>
+              <select class="form-control selectpicker" name="post_id" required data-live-search="true">
                 <?php foreach ($stations as $station) { ?>
-                  <option value="<?php echo $station['id']; ?>" <?php echo (isset($occurrence) && $occurrence['station_id'] == $station['id'] ? 'selected' : ''); ?>>
+                  <option value="<?php echo $station['id']; ?>" <?php echo (isset($occurrence) && $occurrence['post_id'] == $station['id'] ? 'selected' : ''); ?>>
                     <?php echo $station['name']; ?>
                   </option>
                 <?php } ?>
@@ -85,7 +85,7 @@
 <script>
   $(function () {
     appValidateForm($('#occurrence-form'), {
-      station_id: 'required',
+      post_id: 'required',
       occurrence_date: 'required',
       occurrence_type: 'required',
       status: 'required',
