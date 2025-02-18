@@ -36,6 +36,14 @@ class Regulation extends AdminController
     if ($this->input->post()) {
       $data = $this->input->post();
 
+      // Format dates for database
+      if (isset($data['manufacturing_date'])) {
+        $data['manufacturing_date'] = to_sql_date($data['manufacturing_date']);
+      }
+      if (isset($data['expiry_date'])) {
+        $data['expiry_date'] = to_sql_date($data['expiry_date']);
+      }
+
       if ($id == '') {
         $id = $this->vests_model->add($data);
         if ($id) {
@@ -43,6 +51,7 @@ class Regulation extends AdminController
           echo json_encode([
             'success' => true,
             'message' => _l('added_successfully', _l('vest')),
+            'redirect_url' => admin_url('regulation/vests_list')
           ]);
         }
       } else {
@@ -111,6 +120,14 @@ class Regulation extends AdminController
     if ($this->input->post()) {
       $data = $this->input->post();
 
+      // Format dates for database
+      if (isset($data['acquisition_date'])) {
+        $data['acquisition_date'] = to_sql_date($data['acquisition_date']);
+      }
+      if (isset($data['expiry_date'])) {
+        $data['expiry_date'] = to_sql_date($data['expiry_date']);
+      }
+
       if ($id == '') {
         $id = $this->controlled_equipment_model->add($data);
         if ($id) {
@@ -118,6 +135,7 @@ class Regulation extends AdminController
           echo json_encode([
             'success' => true,
             'message' => _l('added_successfully', _l('equipment')),
+            'redirect_url' => admin_url('regulation/controlled_equipment_list')
           ]);
         }
       } else {
@@ -179,6 +197,8 @@ class Regulation extends AdminController
 
   public function process($id = '')
   {
+
+    // dd("Hello world");
     if (!has_permission('regulation', '', $id ? 'edit' : 'create')) {
       ajax_access_denied();
     }
@@ -188,6 +208,13 @@ class Regulation extends AdminController
     if ($this->input->post()) {
       $data = $this->input->post();
 
+      dd($data);
+
+      // Format date for database
+      if (isset($data['date'])) {
+        $data['date'] = to_sql_date($data['date']);
+      }
+
       if ($id == '') {
         $id = $this->processes_model->add($data);
         if ($id) {
@@ -195,6 +222,12 @@ class Regulation extends AdminController
           echo json_encode([
             'success' => true,
             'message' => _l('added_successfully', _l('process')),
+            'redirect_url' => admin_url('regulation/process_list')
+          ]);
+        } else {
+          echo json_encode([
+            'success' => false,
+            'message' => _l('something_went_wrong')
           ]);
         }
       } else {
@@ -203,7 +236,7 @@ class Regulation extends AdminController
           set_alert('success', _l('updated_successfully', _l('process')));
           echo json_encode([
             'success' => true,
-            'message' => _l('updated_successfully', _l('process')),
+            'message' => _l('updated_successfully', _l('process'))
           ]);
         }
       }
@@ -250,58 +283,157 @@ class Regulation extends AdminController
       access_denied('regulation');
     }
 
-    $this->load->model('occurrences_model');
-    $data['title'] = _l('als_occurrences_list');
-    $data['occurrences'] = $this->occurrences_model->get_all_occurrences();
+    if ($this->input->is_ajax_request()) {
+      $this->load->model('occurrences_model');
+      $occurrences = $this->occurrences_model->get_all_occurrences();
 
+      $data = [];
+      foreach ($occurrences as $occurrence) {
+        $options = '';
+        if (has_permission('regulation', '', 'edit')) {
+          $options .= '<a href="#" onclick="edit_occurrence(' . $occurrence['id'] . '); return false;" class="btn btn-default btn-icon"><i class="fa fa-pencil"></i></a> ';
+        }
+        if (has_permission('regulation', '', 'delete')) {
+          $options .= '<a href="#" onclick="delete_occurrence(' . $occurrence['id'] . '); return false;" class="btn btn-danger btn-icon"><i class="fa fa-remove"></i></a>';
+        }
+
+        $status_class = '';
+        $status_label = '';
+        switch ($occurrence['status']) {
+          case 'registered':
+            $status_class = 'info';
+            $status_label = _l('registered');
+            break;
+          case 'under_investigation':
+            $status_class = 'warning';
+            $status_label = _l('under_investigation');
+            break;
+          case 'completed':
+            $status_class = 'success';
+            $status_label = _l('completed');
+            break;
+        }
+
+        $row = [];
+        $row[] = _dt($occurrence['occurrence_datetime']);
+        $row[] = $occurrence['post_name'];
+        $row[] = $occurrence['description'];
+        $row[] = '<span class="label label-' . $status_class . '">' . $status_label . '</span>';
+        $row[] = $occurrence['firstname'] . ' ' . $occurrence['lastname'];
+        $row[] = $options;
+
+        $data[] = $row;
+      }
+
+      echo json_encode([
+        'draw' => $this->input->post('draw'),
+        'recordsTotal' => count($data),
+        'recordsFiltered' => count($data),
+        'data' => $data
+      ]);
+      die;
+    }
+
+    $data['title'] = _l('occurrences_list');
     $this->load->view('admin/regulation/occurrences_list', $data);
   }
 
   public function occurrence($id = '')
   {
+    // Check permission
     if (!has_permission('regulation', '', $id ? 'edit' : 'create')) {
       ajax_access_denied();
     }
 
-    $this->load->model('occurrences_model');
+    try {
+      // Load required models
+      $this->load->model('occurrences_model');
+      $this->load->model('staff_model');
+      $this->load->model('controlled_equipment_model');
 
-    if ($this->input->post()) {
-      $data = $this->input->post();
+      if ($this->input->post()) {
+        try {
+          $data = $this->input->post();
 
-      if ($id == '') {
-        $id = $this->occurrences_model->add($data);
-        if ($id) {
-          set_alert('success', _l('added_successfully', _l('occurrence')));
+          // Validate required fields
+          if (empty($data['post_id'])) {
+            throw new Exception(_l('post_required'));
+          }
+
+          // Format datetime for database
+          if (isset($data['occurrence_datetime'])) {
+            $data['occurrence_datetime'] = to_sql_date($data['occurrence_datetime'], true);
+          }
+
+          // Handle arrays for involved staff and equipment
+          if (isset($data['involved_staff'])) {
+            $data['involved_staff'] = json_encode($data['involved_staff']);
+          }
+          if (isset($data['involved_equipment'])) {
+            $data['involved_equipment'] = json_encode($data['involved_equipment']);
+          }
+
+          if ($id == '') {
+            $success = $this->occurrences_model->add($data);
+            if ($success) {
+              echo json_encode([
+                'success' => true,
+                'message' => _l('added_successfully', _l('occurrence')),
+                'redirect_url' => admin_url('regulation/occurrences_list')
+              ]);
+            }
+          } else {
+            $success = $this->occurrences_model->update($data, $id);
+            if ($success) {
+              echo json_encode([
+                'success' => true,
+                'message' => _l('updated_successfully', _l('occurrence')),
+                'redirect_url' => admin_url('regulation/occurrences_list')
+              ]);
+            }
+          }
+        } catch (Exception $e) {
           echo json_encode([
-            'success' => true,
-            'message' => _l('added_successfully', _l('occurrence')),
+            'success' => false,
+            'message' => $e->getMessage()
           ]);
         }
-      } else {
-        $success = $this->occurrences_model->update($data, $id);
-        if ($success) {
-          set_alert('success', _l('updated_successfully', _l('occurrence')));
-          echo json_encode([
-            'success' => true,
-            'message' => _l('updated_successfully', _l('occurrence')),
-          ]);
-        }
+        die;
       }
+
+      // Prepare data for the view
+      $data = [];
+      if ($id) {
+        $data['occurrence'] = $this->occurrences_model->get_occurrence($id);
+        if (!$data['occurrence']) {
+          show_404();
+        }
+        $title = _l('edit', _l('occurrence_lowercase'));
+      } else {
+        $title = _l('new_occurrence');
+      }
+
+      // Load required data for dropdowns
+      $data['title'] = $title;
+      $data['posts'] = $this->occurrences_model->get_posts();
+      $data['staff_members'] = $this->staff_model->get();
+      $data['equipment'] = $this->controlled_equipment_model->get_all_equipment();
+
+      // Load the view
+      $this->load->view('admin/regulation/occurrence', $data);
+
+    } catch (Exception $e) {
+      // Log the error
+      log_activity('Occurrence Error: ' . $e->getMessage());
+
+      // Return error response
+      header('HTTP/1.1 500 Internal Server Error');
+      echo json_encode([
+        'success' => false,
+        'message' => 'Internal server error: ' . $e->getMessage()
+      ]);
       die;
     }
-
-    if ($id == '') {
-      $title = _l('add_new', _l('occurrence_lowercase'));
-    } else {
-      $data['occurrence'] = $this->occurrences_model->get_occurrence($id);
-      $title = _l('edit', _l('occurrence_lowercase'));
-    }
-
-    $data['title'] = $title;
-    $data['staff_members'] = $this->occurrences_model->get_staff_members();
-    $data['stations'] = $this->occurrences_model->get_stations();
-    $data['equipment'] = $this->occurrences_model->get_equipment();
-    $this->load->view('admin/regulation/occurrence', $data);
   }
 
   public function delete_occurrence($id)
@@ -311,19 +443,21 @@ class Regulation extends AdminController
     }
 
     $this->load->model('occurrences_model');
+    $success = $this->occurrences_model->delete($id);
 
-    if (!$id) {
-      redirect(admin_url('regulation/occurrences_list'));
-    }
-
-    $response = $this->occurrences_model->delete($id);
-    if ($response) {
+    if ($success) {
       set_alert('success', _l('deleted', _l('occurrence')));
-    } else {
-      set_alert('warning', _l('problem_deleting', _l('occurrence_lowercase')));
     }
 
     redirect(admin_url('regulation/occurrences_list'));
+  }
+
+  public function get_occurrence_attachments($id)
+  {
+    $this->load->model('occurrences_model');
+    $attachments = $this->occurrences_model->get_attachments($id);
+
+    echo json_encode(['data' => $attachments]);
   }
 
   public function vigilantes()

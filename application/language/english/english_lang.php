@@ -972,11 +972,11 @@ $lang['settings_delete_only_on_last_invoice'] = 'Delete invoice allowed only on 
 $lang['settings_sales_estimate_prefix'] = 'Estimate Number Prefix';
 $lang['settings_sales_next_estimate_number'] = 'Next estimate Number';
 $lang['settings_sales_next_estimate_number_tooltip'] = 'Set this field to 1 if you want to start from beginning';
-$lang['settings_sales_decrement_estimate_number_on_delete'] = 'Decrement estimate number on delete';
-$lang['settings_sales_decrement_estimate_number_on_delete_tooltip'] = 'Do you want to decrement the estimate number when the last estimate is deleted? eq. If is set this option to YES and before estimate delete the next estimate number is 15 the next estimate number will decrement to 14.If is set to NO the number will remain to 15. If you have setup delete only on last estimate to NO you should set this option to NO too to keep the next estimate number not decremented.';
-$lang['settings_sales_estimate_number_format'] = 'Estimate Number Format';
-$lang['settings_sales_estimate_number_format_year_based'] = 'Year Based';
-$lang['settings_sales_estimate_number_format_number_based'] = 'Number Based (000001)';
+$lang['settings_sales_decrement_invoice_number_on_delete'] = 'Decrement invoice number on delete';
+$lang['settings_sales_decrement_invoice_number_on_delete_tooltip'] = 'Do you want to decrement the invoice number when the last invoice is deleted? eq. If is set this option to YES and before invoice delete the next invoice number is 15 the next invoice number will decrement to 14. If is set to NO the number will remain to 15.  If you have setup delete only on last invoice to NO you should set this option to NO too to keep the next invoice number not decremented.';
+$lang['settings_sales_invoice_number_format'] = 'Invoice Number Format';
+$lang['settings_sales_invoice_number_format_year_based'] = 'Year Based';
+$lang['settings_sales_invoice_number_format_number_based'] = 'Number Based (000001)';
 $lang['settings_delete_only_on_last_estimate'] = 'Delete estimate allowed only on last invoice';
 $lang['settings_send_test_email_heading'] = 'Send Test Email';
 $lang['settings_send_test_email_subheading'] = 'Send test email to make sure that your SMTP settings is set correctly.';
@@ -4037,6 +4037,19 @@ $lang['occurrence_created_by'] = 'Created By';
 $lang['occurrence_status_registered'] = 'Registered';
 $lang['occurrence_status_under_investigation'] = 'Under Investigation';
 $lang['occurrence_status_completed'] = 'Completed';
+// Add Occurences strings
+$lang['occurrences_list'] = 'Incident Records';
+$lang['occurrence'] = 'Incident';
+$lang['occurrence_lowercase'] = 'incident';
+$lang['new_occurrence'] = 'New Incident Record';
+$lang['occurrence_datetime'] = 'Date/Time';
+$lang['service_post'] = 'Service Post';
+$lang['involved_staff'] = 'Involved Staff';
+$lang['involved_equipment'] = 'Involved Equipment';
+$lang['existing_attachments'] = 'Existing Attachments';
+$lang['registered'] = 'Registered';
+$lang['under_investigation'] = 'Under Investigation';
+$lang['completed'] = 'Completed';
 
 // Vigilantes
 $lang['vigilantes'] = 'Vigilantes';
@@ -4061,3 +4074,17 @@ $lang['assign_vehicle_to_post'] = 'Assign Vehicle to Post';
 $lang['vehicle_assigned_successfully'] = 'Vehicle assigned successfully';
 $lang['select_post'] = 'Select Post';
 $lang['service_post'] = 'Service Post';
+
+// Add Occurences strings
+$lang['occurrences_list'] = 'Incident Records';
+$lang['occurrence'] = 'Incident';
+$lang['occurrence_lowercase'] = 'incident';
+$lang['new_occurrence'] = 'New Incident Record';
+$lang['occurrence_datetime'] = 'Date/Time';
+$lang['service_post'] = 'Service Post';
+$lang['involved_staff'] = 'Involved Staff';
+$lang['involved_equipment'] = 'Involved Equipment';
+$lang['existing_attachments'] = 'Existing Attachments';
+$lang['registered'] = 'Registered';
+$lang['under_investigation'] = 'Under Investigation';
+$lang['completed'] = 'Completed';

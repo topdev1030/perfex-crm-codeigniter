@@ -74,13 +74,25 @@
       manufacturing_date: 'required',
       expiry_date: 'required',
       status: 'required'
+    }, function (form) {
+      $.post(form.action, $(form).serialize())
+        .done(function (response) {
+          response = JSON.parse(response);
+          if (response.success) {
+            if (response.redirect_url) {
+              window.location.href = response.redirect_url;
+            }
+          }
+        });
+      return false;
     });
 
     $('.datepicker').datetimepicker({
       format: app.options.date_format,
-      date: new Date(),
+      timepicker: false,
+      ignoreReadonly: true,
+      showClose: true,
       icons: {
-        time: "fa fa-clock-o",
         date: "fa fa-calendar",
         up: "fa fa-chevron-up",
         down: "fa fa-chevron-down"

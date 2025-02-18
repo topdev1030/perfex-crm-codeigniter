@@ -15,9 +15,13 @@ class Occurrences_model extends App_Model
    */
   public function get_all_occurrences()
   {
-    $this->db->select('tblregulation_occurrences.*, tblstaff.firstname, tblstaff.lastname');
-    $this->db->join('tblstaff', 'tblstaff.staffid = tblregulation_occurrences.created_by');
-    return $this->db->get('tblregulation_occurrences')->result_array();
+    $this->db->select('o.*, p.name as post_name, s.firstname, s.lastname');
+    $this->db->from(db_prefix() . 'regulation_occurrences o');
+    $this->db->join(db_prefix() . 'regulation_posts p', 'p.id = o.post_id', 'left');
+    $this->db->join(db_prefix() . 'staff s', 's.staffid = o.created_by', 'left');
+    $this->db->order_by('o.occurrence_datetime', 'desc');
+
+    return $this->db->get()->result_array();
   }
 
   /**
@@ -27,8 +31,11 @@ class Occurrences_model extends App_Model
    */
   public function get_occurrence($id)
   {
-    $this->db->where('id', $id);
-    return $this->db->get('tblregulation_occurrences')->row_array();
+    $this->db->select('o.*, p.name as post_name');
+    $this->db->from(db_prefix() . 'regulation_occurrences o');
+    $this->db->join(db_prefix() . 'regulation_posts p', 'p.id = o.post_id', 'left');
+    $this->db->where('o.id', $id);
+    return $this->db->get()->row_array();
   }
 
   /**
@@ -37,23 +44,32 @@ class Occurrences_model extends App_Model
    */
   public function add($data)
   {
-    $data['created_by'] = get_staff_user_id();
+    // Validate post_id exists
+    $this->db->where('id', $data['post_id']);
+    $post = $this->db->get(db_prefix() . 'regulation_posts')->row();
+    if (!$post) {
+      throw new Exception("Invalid post selected");
+    }
 
-    // Convert arrays to JSON for storage
-    if (isset($data['involved_guards']) && is_array($data['involved_guards'])) {
-      $data['involved_guards'] = json_encode($data['involved_guards']);
+    $data['created_by'] = get_staff_user_id();
+    $data['created_at'] = date('Y-m-d H:i:s');
+
+    // Convert arrays to JSON if they exist
+    if (isset($data['involved_staff']) && is_array($data['involved_staff'])) {
+      $data['involved_staff'] = json_encode($data['involved_staff']);
     }
     if (isset($data['involved_equipment']) && is_array($data['involved_equipment'])) {
       $data['involved_equipment'] = json_encode($data['involved_equipment']);
     }
 
-    $this->db->insert('tblregulation_occurrences', $data);
+    $this->db->insert(db_prefix() . 'regulation_occurrences', $data);
     $insert_id = $this->db->insert_id();
 
     if ($insert_id) {
-      log_activity('New Occurrence Created [ID: ' . $insert_id . ']');
+      log_activity('New Occurrence Added [ID: ' . $insert_id . ']');
       return $insert_id;
     }
+
     return false;
   }
 
@@ -65,21 +81,24 @@ class Occurrences_model extends App_Model
    */
   public function update($data, $id)
   {
-    // Convert arrays to JSON for storage
-    if (isset($data['involved_guards']) && is_array($data['involved_guards'])) {
-      $data['involved_guards'] = json_encode($data['involved_guards']);
+    // Convert involved staff and equipment arrays to JSON if present
+    if (isset($data['involved_staff']) && is_array($data['involved_staff'])) {
+      $data['involved_staff'] = json_encode($data['involved_staff']);
     }
     if (isset($data['involved_equipment']) && is_array($data['involved_equipment'])) {
       $data['involved_equipment'] = json_encode($data['involved_equipment']);
     }
 
     $this->db->where('id', $id);
-    $this->db->update('tblregulation_occurrences', $data);
+    $this->db->update(db_prefix() . 'regulation_occurrences', $data);
 
     if ($this->db->affected_rows() > 0) {
+      // Handle file uploads if any
+      $this->handle_attachments($id);
       log_activity('Occurrence Updated [ID: ' . $id . ']');
       return true;
     }
+
     return false;
   }
 
@@ -90,14 +109,28 @@ class Occurrences_model extends App_Model
    */
   public function delete($id)
   {
+    // Delete attachments first
+    $this->delete_attachments($id);
+
     $this->db->where('id', $id);
-    $this->db->delete('tblregulation_occurrences');
+    $this->db->delete(db_prefix() . 'regulation_occurrences');
 
     if ($this->db->affected_rows() > 0) {
       log_activity('Occurrence Deleted [ID: ' . $id . ']');
       return true;
     }
+
     return false;
+  }
+
+  /**
+   * Get all posts for dropdown
+   * @return array
+   */
+  public function get_posts()
+  {
+    $this->db->where('status', 'active');
+    return $this->db->get(db_prefix() . 'regulation_posts')->result_array();
   }
 
   /**
@@ -107,24 +140,63 @@ class Occurrences_model extends App_Model
   public function get_staff_members()
   {
     $this->db->select('staffid, CONCAT(firstname, " ", lastname) as full_name');
-    return $this->db->get('tblstaff')->result_array();
+    $this->db->from(db_prefix() . 'staff');
+    $this->db->where('active', 1);
+    return $this->db->get()->result_array();
   }
 
-  /**
-   * Get all stations for dropdown
-   * @return array
-   */
-  public function get_stations()
+  private function handle_attachments($occurrence_id)
   {
-    return $this->db->get('tblservice_stations')->result_array();
+    if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'])) {
+      $path = get_upload_path_by_type('occurrences') . $occurrence_id . '/';
+
+      // Create directory if it doesn't exist
+      if (!is_dir($path)) {
+        mkdir($path, 0755, true);
+      }
+
+      for ($i = 0; $i < count($_FILES['attachments']['name']); $i++) {
+        if ($_FILES['attachments']['error'][$i] == 0) {
+          $filename = unique_filename($path, $_FILES['attachments']['name'][$i]);
+          $newFilePath = $path . $filename;
+
+          if (move_uploaded_file($_FILES['attachments']['tmp_name'][$i], $newFilePath)) {
+            $attachment_data = [
+              'occurrence_id' => $occurrence_id,
+              'file_name' => $filename,
+              'filetype' => $_FILES['attachments']['type'][$i],
+              'dateadded' => date('Y-m-d H:i:s'),
+              'added_by' => get_staff_user_id()
+            ];
+            $this->db->insert(db_prefix() . 'regulation_occurrence_attachments', $attachment_data);
+          }
+        }
+      }
+    }
   }
 
-  /**
-   * Get all equipment for dropdown
-   * @return array
-   */
-  public function get_equipment()
+  public function get_attachments($occurrence_id)
   {
-    return $this->db->get('tblregulation_controlled_equipment')->result_array();
+    $this->db->where('occurrence_id', $occurrence_id);
+    return $this->db->get(db_prefix() . 'regulation_occurrence_attachments')->result_array();
+  }
+
+  private function delete_attachments($occurrence_id)
+  {
+    $attachments = $this->get_attachments($occurrence_id);
+    $path = get_upload_path_by_type('occurrences') . $occurrence_id . '/';
+
+    foreach ($attachments as $attachment) {
+      if (file_exists($path . $attachment['file_name'])) {
+        unlink($path . $attachment['file_name']);
+      }
+    }
+
+    if (is_dir($path)) {
+      rmdir($path);
+    }
+
+    $this->db->where('occurrence_id', $occurrence_id);
+    $this->db->delete(db_prefix() . 'regulation_occurrence_attachments');
   }
 }

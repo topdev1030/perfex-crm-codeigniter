@@ -3515,6 +3515,12 @@ CREATE TABLE `tblregulation_posts` (
     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Insert some sample posts
+INSERT INTO `tblregulation_posts` (`name`, `address`, `city`, `state`, `status`) VALUES
+('Main Post', '123 Main Street', 'City 1', 'State 1', 'active'),
+('Secondary Post', '456 Second Street', 'City 2', 'State 2', 'active'),
+('Branch Post', '789 Third Street', 'City 3', 'State 3', 'active');
+
 -- Vests Table
 CREATE TABLE `tblregulation_vests` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
@@ -3562,20 +3568,68 @@ CREATE TABLE `tblregulation_processes` (
     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Occurrences (Incident Records) Table
-CREATE TABLE `tblregulation_occurrences` (
-    `id` int PRIMARY KEY AUTO_INCREMENT,
-    `post_id` int NOT NULL, -- FK to regulation_posts
-    `occurrence_date` datetime NOT NULL,
-    `occurrence_type` varchar(100) NOT NULL,
-    `description` text NOT NULL,
-    `involved_guards` text NULL, -- Stored as JSON with staff IDs
-    `involved_equipment` text NULL, -- Stored as JSON with equipment IDs
+ALTER TABLE `tblstaff`
+    ADD PRIMARY KEY IF NOT EXISTS (`staffid`);
+
+CREATE TABLE IF NOT EXISTS `tblregulation_occurrences` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `post_id` int NOT NULL,                    
+    `occurrence_datetime` datetime NOT NULL,    
+    `description` text NOT NULL,               
+    `involved_staff` text NULL,                
+    `involved_equipment` text NULL,            
     `status` enum('registered', 'under_investigation', 'completed') DEFAULT 'registered',
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-    `created_by` int NOT NULL, -- FK to staff
-    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
-);
+    `created_by` int NOT NULL,                 
+    `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    INDEX `idx_occurrence_post` (`post_id`),
+    INDEX `idx_occurrence_datetime` (`occurrence_datetime`),
+    INDEX `idx_occurrence_status` (`status`),
+    INDEX `idx_occurrence_created` (`created_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create attachments table
+CREATE TABLE IF NOT EXISTS `tblregulation_occurrence_attachments` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `occurrence_id` int NOT NULL,
+    `file_name` varchar(191) NOT NULL,
+    `filetype` varchar(50) DEFAULT NULL,
+    `dateadded` datetime NOT NULL,
+    `added_by` int NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -- Add indexes for better performance
+-- CREATE INDEX `idx_occurrence_post` ON `tblregulation_occurrences` (`post_id`);
+-- CREATE INDEX `idx_occurrence_datetime` ON `tblregulation_occurrences` (`occurrence_datetime`);
+-- CREATE INDEX `idx_occurrence_status` ON `tblregulation_occurrences` (`status`);
+-- CREATE INDEX `idx_occurrence_created` ON `tblregulation_occurrences` (`created_by`);
+
+-- Add foreign key constraints
+ALTER TABLE `tblregulation_occurrences`
+    ADD CONSTRAINT `fk_occurrence_post` 
+    FOREIGN KEY (`post_id`) 
+    REFERENCES `tblregulation_posts` (`id`) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE `tblregulation_occurrences`
+    ADD CONSTRAINT `fk_occurrence_creator` 
+    FOREIGN KEY (`created_by`) 
+    REFERENCES `tblstaff` (`staffid`) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE `tblregulation_occurrence_attachments`
+    ADD CONSTRAINT `fk_occurrence_attachment` 
+    FOREIGN KEY (`occurrence_id`) 
+    REFERENCES `tblregulation_occurrences` (`id`) 
+    ON DELETE CASCADE;
+
+ALTER TABLE `tblregulation_occurrence_attachments`
+    ADD CONSTRAINT `fk_occurrence_attachment_staff` 
+    FOREIGN KEY (`added_by`) 
+    REFERENCES `tblstaff` (`staffid`) 
+    ON DELETE RESTRICT;
 
 -- Item Post Links Table (for tracking item assignments to posts)
 CREATE TABLE `tblregulation_item_post_links` (
@@ -3603,9 +3657,9 @@ CREATE TABLE IF NOT EXISTS `tblstaff_cnv` (
 );
 
 -- Add Foreign Key Constraints
-ALTER TABLE `tblregulation_occurrences`
-    ADD CONSTRAINT `fk_occurrence_post` FOREIGN KEY (`post_id`) 
-    REFERENCES `tblregulation_posts` (`id`) ON DELETE RESTRICT;
+-- ALTER TABLE `tblregulation_occurrences`
+--     ADD CONSTRAINT `fk_occurrence_post` FOREIGN KEY (`post_id`) 
+--     REFERENCES `tblregulation_posts` (`id`) ON DELETE RESTRICT;
 
 ALTER TABLE `tblregulation_item_post_links`
     ADD CONSTRAINT `fk_item_link_post` FOREIGN KEY (`post_id`) 
@@ -3615,7 +3669,7 @@ ALTER TABLE `tblregulation_item_post_links`
 CREATE INDEX `idx_vest_serial` ON `tblregulation_vests` (`serial_number`);
 CREATE INDEX `idx_equipment_serial` ON `tblregulation_controlled_equipment` (`serial_number`);
 CREATE INDEX `idx_process_number` ON `tblregulation_processes` (`process_number`);
-CREATE INDEX `idx_occurrence_date` ON `tblregulation_occurrences` (`occurrence_date`);
+-- CREATE INDEX `idx_occurrence_date` ON `tblregulation_occurrences` (`occurrence_date`);
 CREATE INDEX `idx_item_link_type` ON `tblregulation_item_post_links` (`item_type`, `item_id`);
 
 -- Indexes for dumped tables
@@ -4255,7 +4309,7 @@ ALTER TABLE `tblspam_filters`
 -- Indexes for table `tblstaff`
 --
 ALTER TABLE `tblstaff`
-  ADD PRIMARY KEY (`staffid`),
+  -- ADD PRIMARY KEY (`staffid`),
   ADD KEY `firstname` (`firstname`),
   ADD KEY `lastname` (`lastname`);
 

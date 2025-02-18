@@ -31,14 +31,9 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="start_date"><?php echo _l('process_start_date'); ?></label>
-              <input type="text" class="form-control datepicker" name="start_date" required
-                value="<?php echo (isset($process) ? _d($process['start_date']) : ''); ?>">
-            </div>
-            <div class="form-group">
-              <label for="expected_date"><?php echo _l('process_expected_date'); ?></label>
-              <input type="text" class="form-control datepicker" name="expected_date" required
-                value="<?php echo (isset($process) ? _d($process['expected_date']) : ''); ?>">
+              <label for="date"><?php echo _l('process_date'); ?></label>
+              <input type="text" class="form-control datepicker" name="date" required
+                value="<?php echo (isset($process) ? _d($process['date']) : ''); ?>">
             </div>
             <div class="form-group">
               <label for="completion_date"><?php echo _l('process_completion_date'); ?></label>
@@ -78,11 +73,34 @@
       process_type: 'required',
       process_number: 'required',
       status: 'required',
-      start_date: 'required',
-      expected_date: 'required',
+      date: 'required',
+      completion_date: 'required',
       responsible_id: 'required'
+    }, function (form) {
+      $.post(form.action, $(form).serialize())
+        .done(function (response) {
+          response = JSON.parse(response);
+          if (response.success) {
+            if (response.redirect_url) {
+              window.location.href = response.redirect_url;
+            }
+          } else {
+            alert_float('danger', response.message);
+          }
+        });
+      return false;
     });
 
-    init_datepicker();
+    $('.datepicker').datetimepicker({
+      format: app.options.date_format,
+      timepicker: false,
+      ignoreReadonly: true,
+      showClose: true,
+      icons: {
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down"
+      }
+    });
   });
 </script>

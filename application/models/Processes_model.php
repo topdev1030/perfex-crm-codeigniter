@@ -37,13 +37,22 @@ class Processes_model extends App_Model
    */
   public function add($data)
   {
-    $this->db->insert('tblregulation_processes', $data);
+    // Add created date
+    $data['created_at'] = date('Y-m-d H:i:s');
+
+    // Add created by
+    $data['created_by'] = get_staff_user_id();
+
+    // Insert the data
+    $this->db->insert(db_prefix() . 'processes', $data);
+
     $insert_id = $this->db->insert_id();
 
     if ($insert_id) {
-      log_activity('New Process Created [ID: ' . $insert_id . ']');
+      log_activity('New Process Added [ID: ' . $insert_id . ']');
       return $insert_id;
     }
+
     return false;
   }
 
