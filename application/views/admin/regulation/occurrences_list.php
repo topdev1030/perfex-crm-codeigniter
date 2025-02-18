@@ -11,7 +11,7 @@
 
             <div class="_buttons">
               <?php if (has_permission('regulation', '', 'create')) { ?>
-                <a href="#" onclick="new_occurrence(); return false;" class="btn btn-info pull-left display-block">
+                <a href="#" onclick="new_occurrence(); return false;" class="btn btn-primary pull-left display-block">
                   <i class="fa fa-plus"></i> <?php echo _l('new_occurrence'); ?>
                 </a>
               <?php } ?>

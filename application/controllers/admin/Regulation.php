@@ -15,8 +15,7 @@ class Regulation extends AdminController
   /* List all vests */
   public function vests_list()
   {
-    // Check if user has permission
-    if (!has_permission('regulation', '', 'view')) {
+    if (!staff_can('view', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -29,7 +28,7 @@ class Regulation extends AdminController
   /* Add & update vest */
   public function vest($id = '')
   {
-    if (!has_permission('regulation', '', $id ? 'edit' : 'create')) {
+    if (!staff_can($id ? 'edit' : 'create', 'regulation')) {
       ajax_access_denied();
     }
 
@@ -81,7 +80,7 @@ class Regulation extends AdminController
   /* Delete vest */
   public function delete_vest($id)
   {
-    if (!has_permission('regulation', '', 'delete')) {
+    if (!staff_can('delete', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -101,7 +100,7 @@ class Regulation extends AdminController
 
   public function controlled_equipment_list()
   {
-    if (!has_permission('regulation', '', 'view')) {
+    if (!staff_can('view', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -113,7 +112,7 @@ class Regulation extends AdminController
 
   public function equipment($id = '')
   {
-    if (!has_permission('regulation', '', $id ? 'edit' : 'create')) {
+    if (!staff_can($id ? 'edit' : 'create', 'regulation')) {
       ajax_access_denied();
     }
 
@@ -164,7 +163,7 @@ class Regulation extends AdminController
 
   public function delete_equipment($id)
   {
-    if (!has_permission('regulation', '', 'delete')) {
+    if (!staff_can('delete', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -184,7 +183,7 @@ class Regulation extends AdminController
 
   public function processes_list()
   {
-    if (!has_permission('regulation', '', 'view')) {
+    if (!staff_can('view', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -197,9 +196,7 @@ class Regulation extends AdminController
 
   public function process($id = '')
   {
-
-    // dd("Hello world");
-    if (!has_permission('regulation', '', $id ? 'edit' : 'create')) {
+    if (!staff_can($id ? 'edit' : 'create', 'regulation')) {
       ajax_access_denied();
     }
 
@@ -257,7 +254,7 @@ class Regulation extends AdminController
 
   public function delete_process($id)
   {
-    if (!has_permission('regulation', '', 'delete')) {
+    if (!staff_can('delete', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -279,7 +276,7 @@ class Regulation extends AdminController
 
   public function occurrences_list()
   {
-    if (!has_permission('regulation', '', 'view')) {
+    if (!staff_can('view', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -290,10 +287,10 @@ class Regulation extends AdminController
       $data = [];
       foreach ($occurrences as $occurrence) {
         $options = '';
-        if (has_permission('regulation', '', 'edit')) {
+        if (staff_can('edit', 'regulation')) {
           $options .= '<a href="#" onclick="edit_occurrence(' . $occurrence['id'] . '); return false;" class="btn btn-default btn-icon"><i class="fa fa-pencil"></i></a> ';
         }
-        if (has_permission('regulation', '', 'delete')) {
+        if (staff_can('delete', 'regulation')) {
           $options .= '<a href="#" onclick="delete_occurrence(' . $occurrence['id'] . '); return false;" class="btn btn-danger btn-icon"><i class="fa fa-remove"></i></a>';
         }
 
@@ -340,8 +337,7 @@ class Regulation extends AdminController
 
   public function occurrence($id = '')
   {
-    // Check permission
-    if (!has_permission('regulation', '', $id ? 'edit' : 'create')) {
+    if (!staff_can($id ? 'edit' : 'create', 'regulation')) {
       ajax_access_denied();
     }
 
@@ -438,7 +434,7 @@ class Regulation extends AdminController
 
   public function delete_occurrence($id)
   {
-    if (!has_permission('regulation', '', 'delete')) {
+    if (!staff_can('delete', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -462,7 +458,7 @@ class Regulation extends AdminController
 
   public function vigilantes()
   {
-    if (!has_permission('regulation', '', 'view')) {
+    if (!staff_can('view', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -476,7 +472,7 @@ class Regulation extends AdminController
 
   public function vigilante($id)
   {
-    if (!has_permission('regulation', '', 'edit')) {
+    if (!staff_can('edit', 'regulation')) {
       ajax_access_denied();
     }
 
@@ -513,7 +509,7 @@ class Regulation extends AdminController
 
   public function vehicles_list()
   {
-    if (!has_permission('regulation', '', 'view')) {
+    if (!staff_can('view', 'regulation')) {
       access_denied('regulation');
     }
 
@@ -525,7 +521,7 @@ class Regulation extends AdminController
 
   public function assign_vehicle($id = '')
   {
-    if (!has_permission('regulation', '', 'edit')) {
+    if (!staff_can('edit', 'regulation')) {
       ajax_access_denied();
     }
 
