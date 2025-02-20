@@ -3521,6 +3521,71 @@ INSERT INTO `tblregulation_posts` (`name`, `address`, `city`, `state`, `status`)
 ('Secondary Post', '456 Second Street', 'City 2', 'State 2', 'active'),
 ('Branch Post', '789 Third Street', 'City 3', 'State 3', 'active');
 
+-- Create weapons table
+CREATE TABLE `tblregulation_weapons` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `serial_number` varchar(100) NOT NULL,
+    `type` varchar(50) NOT NULL COMMENT 'pistol, revolver, etc.',
+    `model` varchar(100) NOT NULL,
+    `caliber` varchar(50) NOT NULL,
+    `manufacturer` varchar(100) DEFAULT NULL,
+    `registration_number` varchar(100) NOT NULL,
+    `license_number` varchar(100) NOT NULL,
+    `license_expiry` date NOT NULL,
+    `acquisition_date` date NOT NULL,
+    `last_maintenance` date DEFAULT NULL,
+    `next_maintenance` date DEFAULT NULL,
+    `status` enum('active','inactive','maintenance','assigned') DEFAULT 'active',
+    `assigned_to` int(11) DEFAULT NULL COMMENT 'staff_id of assigned person',
+    `assigned_date` date DEFAULT NULL,
+    `notes` text DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+    `created_by` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `serial_number` (`serial_number`),
+    UNIQUE KEY `registration_number` (`registration_number`),
+    KEY `assigned_to` (`assigned_to`),
+    CONSTRAINT `fk_weapon_staff` FOREIGN KEY (`assigned_to`) REFERENCES `tblstaff` (`staffid`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Add indexes for better performance
+CREATE INDEX idx_weapon_status ON tblregulation_weapons(status);
+CREATE INDEX idx_weapon_license_expiry ON tblregulation_weapons(license_expiry);
+CREATE INDEX idx_weapon_type ON tblregulation_weapons(type);
+
+-- SELECT staffid, firstname, lastname FROM tblstaff;
+-- SET @staff_id = (SELECT staffid FROM tblstaff LIMIT 1);
+
+-- -- Weapon list seed data
+-- INSERT INTO `tblregulation_weapons` 
+-- (`serial_number`, `type`, `model`, `caliber`, `manufacturer`, `registration_number`, 
+-- `license_number`, `license_expiry`, `acquisition_date`, `last_maintenance`, 
+-- `next_maintenance`, `status`, `assigned_to`, `assigned_date`, `notes`, `created_by`, `created_at`) 
+-- VALUES 
+-- -- Pistols
+-- ('P2023001', 'Pistol', 'G2C', '9mm', 'Taurus', 'REG001', 'LIC001', 
+-- '2024-12-31', '2023-01-15', '2023-11-01', '2024-05-01', 'active', 1, 
+-- '2023-01-15', 'Standard issue sidearm', 1, NOW()),
+
+-- ('P2023002', 'Pistol', 'PT100', '.40', 'Taurus', 'REG002', 'LIC002', 
+-- '2024-12-31', '2023-02-20', '2023-10-15', '2024-04-15', 'active', 2, 
+-- '2023-02-20', 'Backup weapon', 1, NOW()),
+
+-- -- Revolvers
+-- ('R2023001', 'Revolver', '627', '.38', 'Taurus', 'REG003', 'LIC003', 
+-- '2024-11-30', '2023-03-10', '2023-09-01', '2024-03-01', 'maintenance', NULL, 
+-- NULL, 'Under maintenance', 1, NOW()),
+
+-- ('R2023002', 'Revolver', '889', '.38', 'Taurus', 'REG004', 'LIC004', 
+-- '2024-10-31', '2023-04-05', '2023-11-15', '2024-05-15', 'inactive', NULL, 
+-- NULL, 'Reserved for training', 1, NOW()),
+
+-- -- Special Weapons
+-- ('S2023001', 'Shotgun', 'ST12', '12GA', 'CBC', 'REG005', 'LIC005', 
+-- '2024-09-30', '2023-05-20', '2023-12-01', '2024-06-01', 'assigned', 3, 
+-- '2023-05-20', 'Vehicle patrol unit', 1, NOW());
+
 -- Vests Table
 CREATE TABLE `tblregulation_vests` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
@@ -3630,6 +3695,32 @@ ALTER TABLE `tblregulation_occurrence_attachments`
     FOREIGN KEY (`added_by`) 
     REFERENCES `tblstaff` (`staffid`) 
     ON DELETE RESTRICT;
+
+-- Vehicle model
+CREATE TABLE `tblregulation_vehicles` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `plate_number` varchar(50) NOT NULL,
+    `model` varchar(100) NOT NULL,
+    `type` varchar(50) NOT NULL,
+    `registration_number` varchar(100) NOT NULL,
+    `registration_expiry` date NOT NULL,
+    `status` enum('active','inactive','maintenance','assigned') DEFAULT 'active',
+    `assigned_to` int(11) DEFAULT NULL,
+    `assigned_date` date DEFAULT NULL,
+    `last_maintenance` date DEFAULT NULL,
+    `next_maintenance` date DEFAULT NULL,
+    `notes` text DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+    `created_by` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `plate_number` (`plate_number`),
+    UNIQUE KEY `registration_number` (`registration_number`),
+    KEY `assigned_to` (`assigned_to`),
+    KEY `created_by` (`created_by`),
+    CONSTRAINT `fk_vehicle_assigned_staff` FOREIGN KEY (`assigned_to`) REFERENCES `tblstaff` (`staffid`) ON DELETE SET NULL,
+    CONSTRAINT `fk_vehicle_created_staff` FOREIGN KEY (`created_by`) REFERENCES `tblstaff` (`staffid`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Item Post Links Table (for tracking item assignments to posts)
 CREATE TABLE `tblregulation_item_post_links` (

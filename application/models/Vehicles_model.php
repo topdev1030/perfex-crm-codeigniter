@@ -72,4 +72,73 @@ class Vehicles_model extends App_Model
     $this->db->where('status', 'active');
     return $this->db->get('tblregulation_posts')->result_array();
   }
+
+  public function add($data)
+  {
+    // Debug log
+    log_activity('Adding vehicle: ' . json_encode($data));
+
+    // Remove id if exists
+    unset($data['id']);
+
+    // Handle null values
+    if (empty($data['assigned_to'])) {
+      $data['assigned_to'] = null;
+    }
+
+    // Validate registration number
+    if (empty($data['registration_number'])) {
+      log_activity('Vehicle creation failed: Registration number is required');
+      return false;
+    }
+
+    // Check for duplicate registration number
+    $this->db->where('registration_number', $data['registration_number']);
+    $existing = $this->db->get(db_prefix() . 'regulation_vehicles')->row();
+    if ($existing) {
+      log_activity('Vehicle creation failed: Registration number already exists');
+      return false;
+    }
+
+    // Add created info
+    $data['created_by'] = get_staff_user_id();
+    $data['created_at'] = date('Y-m-d H:i:s');
+
+    // Insert data
+    $this->db->insert(db_prefix() . 'regulation_vehicles', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+      log_activity('Vehicle added successfully [ID: ' . $insert_id . ']');
+      return $insert_id;
+    }
+
+    // Log error if insert fails
+    log_activity('Failed to add vehicle. DB Error: ' . $this->db->error()['message']);
+    return false;
+  }
+
+  public function update($data, $id)
+  {
+    // Remove id from data array
+    unset($data['id']);
+
+    // Handle null values for foreign keys
+    if (empty($data['assigned_to'])) {
+      $data['assigned_to'] = null;
+    }
+
+    // Update timestamp
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->where('id', $id);
+    $this->db->update(db_prefix() . 'regulation_vehicles', $data);
+
+    if ($this->db->affected_rows() > 0) {
+      log_activity('Vehicle Updated [ID: ' . $id . ']');
+      return true;
+    }
+
+    return false;
+  }
 }

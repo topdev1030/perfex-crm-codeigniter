@@ -10,6 +10,9 @@ class Regulation extends AdminController
     $this->load->model('vests_model');
     $this->load->model('controlled_equipment_model');
     $this->load->model('vehicles_model');
+    $this->load->model('weapons_model');
+    $this->load->model('staff_model');
+    $this->load->helper('modules_helper');
   }
 
   /* List all vests */
@@ -513,10 +516,98 @@ class Regulation extends AdminController
       access_denied('regulation');
     }
 
-    $data['title'] = _l('regulation_vehicles');
-    $data['vehicles'] = $this->vehicles_model->get_all_vehicles();
+    $data['title'] = _l('vehicles_list');
+    $data['is_fleet_active'] = is_fleet_module_active();
+
+    if ($data['is_fleet_active']) {
+      // Load Fleet module data
+      $this->load->model('fleet/fleet_model');
+      $data['fleet_vehicles'] = $this->fleet_model->get_vehicles();
+    }
 
     $this->load->view('admin/regulation/vehicles_list', $data);
+  }
+
+  public function vehicle($id = '')
+  {
+    if (!staff_can($id ? 'edit' : 'create', 'regulation')) {
+      ajax_access_denied();
+    }
+
+    if ($this->input->post()) {
+      try {
+        $data = $this->input->post();
+
+        // Validate required fields
+        $required_fields = ['plate_number', 'registration_number', 'model', 'type', 'registration_expiry'];
+        foreach ($required_fields as $field) {
+          if (empty($data[$field])) {
+            throw new Exception($field . ' is required');
+          }
+        }
+
+        // Format dates for database
+        if (!empty($data['registration_expiry'])) {
+          $data['registration_expiry'] = to_sql_date($data['registration_expiry']);
+        }
+
+        // Handle empty assigned_to
+        if (empty($data['assigned_to'])) {
+          $data['assigned_to'] = null;
+        }
+
+        if ($id == '') {
+          // Check for duplicate registration number
+          $this->db->where('registration_number', $data['registration_number']);
+          $existing = $this->db->get(db_prefix() . 'regulation_vehicles')->row();
+          if ($existing) {
+            throw new Exception('Registration number already exists');
+          }
+
+          $data['created_by'] = get_staff_user_id();
+          $id = $this->vehicles_model->add($data);
+
+          if ($id) {
+            echo json_encode([
+              'success' => true,
+              'message' => _l('added_successfully', _l('vehicle')),
+              'id' => $id,
+              'redirect_url' => admin_url('regulation/vehicles_list')
+            ]);
+          } else {
+            throw new Exception('Failed to create vehicle');
+          }
+        } else {
+          // Update existing vehicle
+          $success = $this->vehicles_model->update($data, $id);
+          if ($success) {
+            echo json_encode([
+              'success' => true,
+              'message' => _l('updated_successfully', _l('vehicle')),
+              'id' => $id,
+              'redirect_url' => admin_url('regulation/vehicles_list')
+            ]);
+          }
+        }
+      } catch (Exception $e) {
+        echo json_encode([
+          'success' => false,
+          'message' => $e->getMessage()
+        ]);
+      }
+      die;
+    }
+
+    if ($id == '') {
+      $title = _l('add_new', _l('vehicle_lowercase'));
+    } else {
+      $data['vehicle'] = $this->vehicles_model->get($id);
+      $title = _l('edit', _l('vehicle_lowercase'));
+    }
+
+    $data['title'] = $title;
+    $data['staff_members'] = $this->staff_model->get();
+    $this->load->view('admin/regulation/vehicle', $data);
   }
 
   public function assign_vehicle($id = '')
@@ -541,5 +632,258 @@ class Regulation extends AdminController
     $data['title'] = _l('assign_vehicle_to_post');
 
     $this->load->view('admin/regulation/assign_vehicle', $data);
+  }
+
+  public function diagnostics()
+  {
+    try {
+      if (!staff_can('view', 'regulation')) {
+        access_denied('regulation');
+      }
+
+      // Load model
+      $this->load->model('regulation_model');
+
+      $data = [
+        'title' => _l('regulation_diagnostics'),
+        'expired_vests' => [],
+        'expired_weapons' => [],
+        'expired_cnvs' => [],
+        'pending_processes' => [],
+        'delayed_processes' => [],
+        'recent_occurrences' => []
+      ];
+
+      // Get data with error handling
+      try {
+        $data['expired_vests'] = $this->regulation_model->get_expired_items('vests');
+      } catch (Exception $e) {
+        log_activity('Error loading vests: ' . $e->getMessage());
+      }
+
+      // try {
+      //   $data['expired_weapons'] = $this->regulation_model->get_expired_items('weapons');
+      // } catch (Exception $e) {
+      //   log_activity('Error loading weapons: ' . $e->getMessage());
+      // }
+
+      // try {
+      //   $data['expired_cnvs'] = $this->regulation_model->get_expired_items('cnvs');
+      // } catch (Exception $e) {
+      //   log_activity('Error loading cnvs: ' . $e->getMessage());
+      // }
+
+      try {
+        $data['pending_processes'] = $this->regulation_model->get_pending_processes();
+      } catch (Exception $e) {
+        log_activity('Error loading pending processes: ' . $e->getMessage());
+      }
+
+      try {
+        $data['delayed_processes'] = $this->regulation_model->get_delayed_processes();
+      } catch (Exception $e) {
+        log_activity('Error loading delayed processes: ' . $e->getMessage());
+      }
+
+      try {
+        $data['recent_occurrences'] = $this->regulation_model->get_recent_occurrences();
+      } catch (Exception $e) {
+        log_activity('Error loading occurrences: ' . $e->getMessage());
+      }
+
+      // Load view
+      $this->load->view('admin/regulation/diagnostics', $data);
+
+    } catch (Exception $e) {
+      // Log the error
+      log_activity('Diagnostics page error: ' . $e->getMessage());
+
+      // Show error page
+      show_error($e->getMessage(), 500, 'An error occurred');
+    }
+  }
+
+  public function weapons_list()
+  {
+    if (!staff_can('view', 'regulation')) {
+      access_denied('regulation');
+    }
+
+    $data['title'] = _l('weapons_list');
+    $this->load->view('admin/regulation/weapons_list', $data);
+  }
+
+  public function weapon($id = '')
+  {
+    if (!staff_can($id ? 'edit' : 'create', 'regulation')) {
+      ajax_access_denied();
+    }
+
+    if ($this->input->post()) {
+      try {
+        $data = $this->input->post();
+
+        // Handle empty assigned_to field
+        if (empty($data['assigned_to'])) {
+          $data['assigned_to'] = null;
+          $data['assigned_date'] = null;
+        }
+
+        // Format dates for database
+        if (!empty($data['license_expiry'])) {
+          $data['license_expiry'] = to_sql_date($data['license_expiry']);
+        }
+        if (!empty($data['acquisition_date'])) {
+          $data['acquisition_date'] = to_sql_date($data['acquisition_date']);
+        }
+        if (!empty($data['last_maintenance'])) {
+          $data['last_maintenance'] = to_sql_date($data['last_maintenance']);
+        }
+        if (!empty($data['next_maintenance'])) {
+          $data['next_maintenance'] = to_sql_date($data['next_maintenance']);
+        }
+        if (!empty($data['assigned_date'])) {
+          $data['assigned_date'] = to_sql_date($data['assigned_date']);
+        }
+
+        // Set created_by for new records
+        if ($id == '') {
+          $data['created_by'] = get_staff_user_id();
+        }
+
+        if ($id == '') {
+          $id = $this->weapons_model->add($data);
+          if ($id) {
+            echo json_encode([
+              'success' => true,
+              'message' => _l('added_successfully', _l('weapon')),
+              'id' => $id,
+              'redirect_url' => admin_url('regulation/weapons_list')
+            ]);
+          }
+        } else {
+          $success = $this->weapons_model->update($data, $id);
+          if ($success) {
+            echo json_encode([
+              'success' => true,
+              'message' => _l('updated_successfully', _l('weapon')),
+              'id' => $id,
+              'redirect_url' => admin_url('regulation/weapons_list')
+            ]);
+          }
+        }
+      } catch (Exception $e) {
+        // Log the error and return error response
+        log_activity('Error in weapon save: ' . $e->getMessage());
+        echo json_encode([
+          'success' => false,
+          'message' => 'Error: ' . $e->getMessage()
+        ]);
+      }
+      die;
+    }
+
+    if ($id == '') {
+      $title = _l('add_new', _l('weapon_lowercase'));
+    } else {
+      $data['weapon'] = $this->weapons_model->get($id);
+      $title = _l('edit', _l('weapon_lowercase'));
+    }
+
+    $data['title'] = $title;
+    $data['staff_members'] = $this->staff_model->get();
+    $this->load->view('admin/regulation/weapon', $data);
+  }
+
+  public function delete_weapon($id)
+  {
+    if (!staff_can('delete', 'regulation')) {
+      access_denied('regulation');
+    }
+
+    $response = $this->weapons_model->delete($id);
+    if ($response) {
+      set_alert('success', _l('deleted', _l('weapon')));
+    } else {
+      set_alert('warning', _l('problem_deleting', _l('weapon_lowercase')));
+    }
+
+    redirect(admin_url('regulation/weapons_list'));
+  }
+
+  public function get_weapons_table()
+  {
+    if (!staff_can('view', 'regulation')) {
+      ajax_access_denied();
+    }
+
+    $this->load->model('weapons_model');
+
+    $select = [
+      'id',
+      'serial_number',
+      'type',
+      'model',
+      'caliber',
+      'license_expiry',
+      'status',
+      'assigned_to'
+    ];
+
+    $aColumns = $select;
+    $sIndexColumn = "id";
+    $sTable = db_prefix() . 'regulation_weapons';
+
+    $result = data_tables_init($aColumns, $sIndexColumn, $sTable, [], [], ['id']);
+    $output = $result['output'];
+    $rResult = $result['rResult'];
+
+    foreach ($rResult as $aRow) {
+      $row = [];
+
+      // Serial Number
+      $row[] = $aRow['serial_number'];
+
+      // Type
+      $row[] = $aRow['type'];
+
+      // Model
+      $row[] = $aRow['model'];
+
+      // Caliber
+      $row[] = $aRow['caliber'];
+
+      // License Expiry
+      $row[] = _d($aRow['license_expiry']);
+
+      // Status
+      $row[] = '<span class="label label-' . ($aRow['status'] == 'active' ? 'success' : 'warning') . '">'
+        . _l($aRow['status']) . '</span>';
+
+      // Assigned To
+      if ($aRow['assigned_to']) {
+        $this->db->select('firstname, lastname');
+        $this->db->where('staffid', $aRow['assigned_to']);
+        $staff = $this->db->get(db_prefix() . 'staff')->row();
+        $row[] = $staff ? $staff->firstname . ' ' . $staff->lastname : '';
+      } else {
+        $row[] = '';
+      }
+
+      // Options
+      $options = '';
+      if (staff_can('edit', 'regulation')) {
+        $options .= '<a href="#" onclick="edit_weapon(' . $aRow['id'] . '); return false;" class="btn btn-default btn-icon"><i class="fa fa-pencil-square-o"></i></a> ';
+      }
+      if (staff_can('delete', 'regulation')) {
+        $options .= '<a href="' . admin_url('regulation/delete_weapon/' . $aRow['id']) . '" class="btn btn-danger btn-icon _delete"><i class="fa fa-remove"></i></a>';
+      }
+      $row[] = $options;
+
+      $output['aaData'][] = $row;
+    }
+
+    echo json_encode($output);
+    die;
   }
 }

@@ -3968,8 +3968,29 @@ $lang['als_vests_list_submenu'] = 'Vests List';
 // $lang['als_vehicles_submenu'] = 'Vehicles';
 // $lang['als_ongoing_processes_submenu'] = 'Ongoing Processes';
 // $lang['als_incident_records_submenu'] = 'Incident Records';
-$lang['als_diagnostics_submenu'] = 'Diagnostics';
+// $lang['als_diagnostics_submenu'] = 'Diagnostics';
 $lang['als_reports_submenu'] = 'Reports';
+
+// Regulation Weapons Lists
+$lang['weapons_list'] = 'Weapons List';
+$lang['weapon'] = 'Weapon';
+$lang['weapon_lowercase'] = 'weapon';
+$lang['new_weapon'] = 'New Weapon';
+$lang['edit_weapon'] = 'Edit Weapon';
+$lang['serial_number'] = 'Serial Number';
+$lang['type'] = 'Type';
+$lang['model'] = 'Model';
+$lang['caliber'] = 'Caliber';
+$lang['manufacturer'] = 'Manufacturer';
+$lang['registration_number'] = 'Registration Number';
+$lang['license_number'] = 'License Number';
+$lang['license_expiry'] = 'License Expiry';
+$lang['acquisition_date'] = 'Acquisition Date';
+$lang['last_maintenance'] = 'Last Maintenance';
+$lang['next_maintenance'] = 'Next Maintenance';
+$lang['assigned_to'] = 'Assigned To';
+$lang['assigned_date'] = 'Assigned Date';
+$lang['maintenance'] = 'Maintenance';
 
 // Regulation Vests Lists
 $lang['als_vests_list_submenu'] = 'Vests List';
@@ -4074,6 +4095,17 @@ $lang['assign_vehicle_to_post'] = 'Assign Vehicle to Post';
 $lang['vehicle_assigned_successfully'] = 'Vehicle assigned successfully';
 $lang['select_post'] = 'Select Post';
 $lang['service_post'] = 'Service Post';
+$lang['using_fleet_module'] = 'You are currently using the Fleet Management module.';
+$lang['go_to_fleet_module'] = 'Go to Fleet Management';
+$lang['vehicles_list'] = 'Vehicles List';
+$lang['vehicle'] = 'Vehicle';
+$lang['vehicle_lowercase'] = 'vehicle';
+$lang['new_vehicle'] = 'New Vehicle';
+$lang['edit_vehicle'] = 'Edit Vehicle';
+$lang['plate_number'] = 'Plate Number';
+$lang['model'] = 'Model';
+$lang['type'] = 'Type';
+$lang['registration_expiry'] = 'Registration Expiry';
 
 // Add Occurences strings
 $lang['occurrences_list'] = 'Incident Records';
@@ -4088,3 +4120,14 @@ $lang['existing_attachments'] = 'Existing Attachments';
 $lang['registered'] = 'Registered';
 $lang['under_investigation'] = 'Under Investigation';
 $lang['completed'] = 'Completed';
+
+// Diagnostics
+$lang['als_diagnostics_submenu'] = 'Diagnostics';
+$lang['expiring_items'] = 'Expiring Items';
+$lang['expiring_vests'] = 'Expiring Vests';
+$lang['expiring_weapons'] = 'Expiring Weapons';
+$lang['expiring_cnvs'] = 'Expiring CNVs';
+$lang['pending_processes'] = 'Pending Processes';
+$lang['delayed_processes'] = 'Delayed Processes';
+$lang['days_overdue'] = 'Days Overdue';
+$lang['recent_occurrences'] = 'Recent Occurrences';

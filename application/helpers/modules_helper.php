@@ -274,7 +274,7 @@ function register_language_files($module, $languages = [])
 }
 
 /**
-* @since  2.3.0
+ * @since  2.3.0
  * This is private function
  * List of uninstallable modules
  * In most cases these are the default modules that comes with the installation
@@ -294,7 +294,7 @@ function uninstallable_modules()
  * @param  string  $version      The version that deprecated the hook.
  * @param  string  $replacement  The hook that should have been used.
  * @param  string  $message      A message regarding the change.
-*/
+ */
 function do_action_deprecated($tag, $args, $version, $replacement = false, $message = null)
 {
     if (!hooks()->has_action($tag)) {
@@ -320,7 +320,7 @@ function do_action_deprecated($tag, $args, $version, $replacement = false, $mess
  * @param  string  $version      The version that deprecated the hook.
  * @param  string  $replacement  The hook that should have been used.
  * @param  string  $message      A message regarding the change.
-*/
+ */
 function apply_filters_deprecated($tag, $args, $version, $replacement = false, $message = null)
 {
     if (!hooks()->has_filter($tag)) {
@@ -330,4 +330,12 @@ function apply_filters_deprecated($tag, $args, $version, $replacement = false, $
     _deprecated_hook($tag, $version, $replacement, $message);
 
     return hooks()->apply_filters_ref_array($tag, $args);
+}
+
+function is_fleet_module_active()
+{
+    $CI = &get_instance();
+    $CI->db->where('module_name', 'fleet');
+    $module = $CI->db->get(db_prefix() . 'modules')->row();
+    return ($module && $module->active == 1);
 }
