@@ -671,7 +671,7 @@ function app_init_admin_sidebar_menu_items()
     $CI->app_menu->add_sidebar_children_item('regulation', [
         'slug' => 'diagnostics',
         'name' => _l('als_diagnostics_submenu'),
-        'href' => admin_url('regulation/diagnostics'),
+        'href' => admin_url('diagnostics'),
         'position' => 40,
         'badge' => [],
     ]);

@@ -43,7 +43,7 @@
                       <td>
                         <a href="<?php echo admin_url('fleet/vehicle/' . $vehicle->id); ?>"
                           class="btn btn-default btn-icon">
-                          <i class="fa fa-pencil-square-o"></i>
+                          <i class="fa fa-pencil"></i>
                         </a>
                       </td>
                     </tr>

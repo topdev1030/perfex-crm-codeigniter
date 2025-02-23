@@ -4131,3 +4131,34 @@ $lang['pending_processes'] = 'Pending Processes';
 $lang['delayed_processes'] = 'Delayed Processes';
 $lang['days_overdue'] = 'Days Overdue';
 $lang['recent_occurrences'] = 'Recent Occurrences';
+
+// Reports
+$lang['regulation_report'] = 'Regulation Report';
+$lang['service_post'] = 'Service Post';
+$lang['expiration_date'] = 'Expiration Date';
+$lang['item_type'] = 'Item Type';
+$lang['filter'] = 'Filter';
+$lang['export_pdf'] = 'Export to PDF';
+$lang['export_excel'] = 'Export to Excel';
+$lang['id'] = 'ID';
+$lang['item_name'] = 'Item Name';
+$lang['serial_number'] = 'Serial Number';
+$lang['expiry_date'] = 'Expiry Date';
+$lang['type'] = 'Type';
+$lang['all_types'] = 'All Types';
+$lang['weapon'] = 'Weapon';
+$lang['cnv'] = 'CNV';
+$lang['other'] = 'Other';
+$lang['expiring_items'] = 'Expiring Items';
+
+// Diagnostics
+$lang['diagnostics'] = 'Diagnostics';
+$lang['expired_items'] = 'Expired Items';
+$lang['pending_processes'] = 'Pending Processes';
+$lang['item_name'] = 'Item Name';
+$lang['expiration_date'] = 'Expiration Date';
+$lang['item_type'] = 'Item Type';
+$lang['process_type'] = 'Process Type';
+$lang['start_date'] = 'Start Date';
+$lang['expected_date'] = 'Expected Date';
+$lang['status'] = 'Status';

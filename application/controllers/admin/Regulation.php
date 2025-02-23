@@ -2,6 +2,10 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 class Regulation extends AdminController
 {
   public function __construct()
@@ -661,17 +665,17 @@ class Regulation extends AdminController
         log_activity('Error loading vests: ' . $e->getMessage());
       }
 
-      // try {
-      //   $data['expired_weapons'] = $this->regulation_model->get_expired_items('weapons');
-      // } catch (Exception $e) {
-      //   log_activity('Error loading weapons: ' . $e->getMessage());
-      // }
+      try {
+        $data['expired_weapons'] = $this->regulation_model->get_expired_items('weapons');
+      } catch (Exception $e) {
+        log_activity('Error loading weapons: ' . $e->getMessage());
+      }
 
-      // try {
-      //   $data['expired_cnvs'] = $this->regulation_model->get_expired_items('cnvs');
-      // } catch (Exception $e) {
-      //   log_activity('Error loading cnvs: ' . $e->getMessage());
-      // }
+      try {
+        $data['expired_cnvs'] = $this->regulation_model->get_expired_items('cnvs');
+      } catch (Exception $e) {
+        log_activity('Error loading cnvs: ' . $e->getMessage());
+      }
 
       try {
         $data['pending_processes'] = $this->regulation_model->get_pending_processes();
@@ -885,5 +889,101 @@ class Regulation extends AdminController
 
     echo json_encode($output);
     die;
+  }
+
+  public function reports()
+  {
+    if (!staff_can('view', 'regulation')) {
+      access_denied('regulation');
+
+      // Fetch service posts
+      $this->db->select('id, name');
+      $data['service_posts'] = $this->db->get('tblservice_posts')->result_array();
+
+      // Fetch item types
+      $this->db->select('id, name');
+      $data['item_types'] = $this->db->get('tblitem_types')->result_array();
+    }
+
+    $data['title'] = _l('report');
+    $this->load->view('admin/regulation/report', $data);
+  }
+
+  public function get_report_data()
+  {
+    if (!staff_can('view', 'regulation')) {
+      ajax_access_denied();
+    }
+
+    $service_post = $this->input->post('service_post');
+    $expiration_date = $this->input->post('expiration_date');
+    $item_type = $this->input->post('item_type');
+
+    $data = [];
+
+    // Determine which table to query based on item type
+    switch ($item_type) {
+      case 'weapons':
+        $this->db->select('serial_number as item_name, tblregulation_posts.name as service_post, license_expiry as expiration_date, "weapons" as item_type');
+        $this->db->from('tblregulation_weapons');
+        $this->db->join('tblregulation_item_post_links', 'tblregulation_item_post_links.item_id = tblregulation_weapons.id AND tblregulation_item_post_links.item_type = "weapon"', 'left');
+        $this->db->join('tblregulation_posts', 'tblregulation_posts.id = tblregulation_item_post_links.post_id', 'left');
+        if ($service_post) {
+          $this->db->where('tblregulation_posts.id', $service_post);
+        }
+        if ($expiration_date) {
+          $this->db->where('license_expiry <=', $expiration_date);
+        }
+        $data = $this->db->get()->result_array();
+        break;
+
+      case 'vests':
+        $this->db->select('serial_number as item_name, tblregulation_posts.name as service_post, expiry_date as expiration_date, "vests" as item_type');
+        $this->db->from('tblregulation_vests');
+        $this->db->join('tblregulation_item_post_links', 'tblregulation_item_post_links.item_id = tblregulation_vests.id AND tblregulation_item_post_links.item_type = "vest"', 'left');
+        $this->db->join('tblregulation_posts', 'tblregulation_posts.id = tblregulation_item_post_links.post_id', 'left');
+        if ($service_post) {
+          $this->db->where('tblregulation_posts.id', $service_post);
+        }
+        if ($expiration_date) {
+          $this->db->where('expiry_date <=', $expiration_date);
+        }
+        $data = $this->db->get()->result_array();
+        break;
+
+      case 'occurrences':
+        $this->db->select('description as item_name, tblregulation_posts.name as service_post, occurrence_datetime as expiration_date, "occurrences" as item_type');
+        $this->db->from('tblregulation_occurrences');
+        $this->db->join('tblregulation_posts', 'tblregulation_posts.id = tblregulation_occurrences.post_id', 'left');
+        if ($service_post) {
+          $this->db->where('tblregulation_posts.id', $service_post);
+        }
+        if ($expiration_date) {
+          $this->db->where('occurrence_datetime <=', $expiration_date);
+        }
+        $data = $this->db->get()->result_array();
+        break;
+
+      case 'processes':
+        $this->db->select('process_type as item_name, tblregulation_posts.name as service_post, expected_date as expiration_date, "processes" as item_type');
+        $this->db->from('tblregulation_processes');
+        $this->db->join('tblregulation_posts', 'tblregulation_posts.id = tblregulation_processes.related_item_id', 'left');
+        if ($service_post) {
+          $this->db->where('tblregulation_posts.id', $service_post);
+        }
+        if ($expiration_date) {
+          $this->db->where('expected_date <=', $expiration_date);
+        }
+        $data = $this->db->get()->result_array();
+        break;
+
+      default:
+        // Handle default case or other item types if necessary
+        break;
+    }
+
+    echo json_encode([
+      'data' => $data
+    ]);
   }
 }

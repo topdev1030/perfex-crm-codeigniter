@@ -18,14 +18,14 @@ class Regulation_model extends App_Model
           $table = 'regulation_vests';
           $fields = 'id, serial_number, expiry_date';
           break;
-        // case 'weapons':
-        //   $table = 'regulation_weapons';
-        //   $fields = 'id, serial_number, license_expiry as expiry_date';
-        //   break;
-        // case 'cnvs':
-        //   $table = 'regulation_cnvs';
-        //   $fields = 'id, document_number as serial_number, expiry_date';
-        //   break;
+        case 'weapons':
+          $table = 'regulation_weapons';
+          $fields = 'id, serial_number, license_expiry as expiry_date';
+          break;
+        case 'cnvs':
+          $table = 'regulation_cnvs';
+          $fields = 'id, document_number as serial_number, expiry_date';
+          break;
         default:
           return [];
       }

@@ -285,6 +285,37 @@ $lang['vehicle_assigned_successfully'] = 'Veículo atribuído com sucesso';
 $lang['select_post'] = 'Selecionar Posto';
 $lang['service_post'] = 'Posto de Serviço';
 
+// Regulation reports
+$lang['regulation_report'] = 'Relatório de Regulamentação';
+$lang['service_post'] = 'Posto de Serviço';
+$lang['expiration_date'] = 'Data de Expiração';
+$lang['item_type'] = 'Tipo de Item';
+$lang['filter'] = 'Filtrar';
+$lang['export_pdf'] = 'Exportar para PDF';
+$lang['export_excel'] = 'Exportar para Excel';
+$lang['id'] = 'ID';
+$lang['item_name'] = 'Nome do Item';
+$lang['serial_number'] = 'Número de Série';
+$lang['expiry_date'] = 'Data de Validade';
+$lang['type'] = 'Tipo';
+$lang['all_types'] = 'Todos os Tipos';
+$lang['weapon'] = 'Arma';
+$lang['cnv'] = 'CNV';
+$lang['other'] = 'Outro';
+$lang['expiring_items'] = 'Itens a Expirar';
+
+// Diagnostics
+$lang['diagnostics'] = 'Diagnósticos';
+$lang['expired_items'] = 'Itens Expirados';
+$lang['pending_processes'] = 'Processos Pendentes';
+$lang['item_name'] = 'Nome do Item';
+$lang['expiration_date'] = 'Data de Expiração';
+$lang['item_type'] = 'Tipo de Item';
+$lang['process_type'] = 'Tipo de Processo';
+$lang['start_date'] = 'Data de Início';
+$lang['expected_date'] = 'Data Esperada';
+$lang['status'] = 'Status';
+
 # Invoices
 $lang['invoices'] = 'Faturas';
 $lang['invoice'] = 'Fatura';
