@@ -235,7 +235,9 @@ $lang['process_status_cancelled'] = 'Cancelado';
 
 // Occurrences
 $lang['als_occurrences_list'] = 'Ocorrências';
+$lang['occurrences_list'] = 'Registros de Incidentes';
 $lang['new_occurrence'] = 'Nova Ocorrência';
+$lang['occurrence_datetime'] = 'Data/Hora';
 $lang['occurrence'] = 'Ocorrência';
 $lang['occurrence_lowercase'] = 'ocorrência';
 $lang['occurrence_date'] = 'Data';
@@ -243,6 +245,7 @@ $lang['occurrence_type'] = 'Tipo';
 $lang['occurrence_station'] = 'Posto';
 $lang['occurrence_status'] = 'Status';
 $lang['occurrence_description'] = 'Descrição';
+$lang['occurrence_post'] = 'Posto';
 $lang['occurrence_involved_guards'] = 'Vigilantes Envolvidos';
 $lang['occurrence_involved_equipment'] = 'Equipamentos Envolvidos';
 $lang['occurrence_created_by'] = 'Criado Por';
@@ -279,11 +282,15 @@ $lang['vehicle_plate'] = 'Placa';
 $lang['vehicle_registration_expiry'] = 'Vencimento do Registro';
 $lang['current_post'] = 'Posto Atual';
 $lang['vehicle_status'] = 'Status';
+$lang['vehicles_list'] = 'lista de veículos';
 $lang['not_assigned'] = 'Não Atribuído';
 $lang['assign_vehicle_to_post'] = 'Atribuir Veículo ao Posto';
 $lang['vehicle_assigned_successfully'] = 'Veículo atribuído com sucesso';
+$lang['plate_number'] = 'Número da placa';
 $lang['select_post'] = 'Selecionar Posto';
 $lang['service_post'] = 'Posto de Serviço';
+$lang['registration_expiry'] = 'Expiração do registro';
+$lang['model'] = 'Modelo';
 
 // Regulation reports
 $lang['regulation_report'] = 'Relatório de Regulamentação';
@@ -656,6 +663,7 @@ $lang['als_utilities'] = 'Utilidades';
 $lang['als_announcements_submenu'] = 'Anúncios';
 $lang['als_calendar_submenu'] = 'Calendário';
 $lang['als_activity_log_submenu'] = 'Registro de Atividade';
+$lang['assigned_to'] = 'Atribuído a';
 
 # Regulation Submenus
 $lang['als_regulation'] = 'Regulamentação';
@@ -668,6 +676,27 @@ $lang['als_weapons_list_submenu'] = 'Relação de Armas';
 // $lang['als_incident_records_submenu'] = 'Livro de Ocorrências';
 $lang['als_diagnostics_submenu'] = 'Diagnóstico';
 $lang['als_reports_submenu'] = 'Relatórios';
+
+// Regulation Weapons Lists
+$lang['weapons_list'] = 'Lista de Armas';
+$lang['weapon'] = 'Arma';
+$lang['weapon_lowercase'] = 'arma';
+$lang['new_weapon'] = 'Nova Arma';
+$lang['edit_weapon'] = 'Editar Arma';
+$lang['serial_number'] = 'Número de Série';
+$lang['type'] = 'Tipo';
+$lang['model'] = 'Modelo';
+$lang['caliber'] = 'Calibre';
+$lang['manufacturer'] = 'Fabricante';
+$lang['registration_number'] = 'Número de Registro';
+$lang['license_number'] = 'Número da Licença';
+$lang['license_expiry'] = 'Validade da Licença';
+$lang['acquisition_date'] = 'Data de Aquisição';
+$lang['last_maintenance'] = 'Última Manutenção';
+$lang['next_maintenance'] = 'Próxima Manutenção';
+$lang['assigned_to'] = 'Atribuído a';
+$lang['assigned_date'] = 'Data de Atribuição';
+$lang['maintenance'] = 'Manutenção';
 
 // Regulation Vests Lists
 $lang['als_vests_list_submenu'] = 'Lista de Coletes';
@@ -684,7 +713,7 @@ $lang['vest_notes'] = 'Observações';
 $lang['vest_status_active'] = 'Ativo';
 $lang['vest_status_inactive'] = 'Inativo';
 $lang['vest_status_maintenance'] = 'Em Manutenção';
-
+$lang['model'] = 'Modelo';
 // CRUD related messages (if not already existing in the language file)
 $lang['added_successfully'] = '%s adicionado com sucesso';
 $lang['updated_successfully'] = '%s atualizado com sucesso';
@@ -4027,7 +4056,7 @@ $lang['ticket_reports_replies_to_tickets'] = 'Replies To Tickets';
 $lang['ticket_reports_average_reply_time'] = 'Average Reply Time';
 $lang['home_tickets_report'] = 'Staff Tickets Report';
 $lang['ticket_reports_average_reply_time_help'] = 'Average response time from assigned tickets.';
-$lang['created_by'] = 'Created by';
+$lang['created_by'] = 'Criado por';
 
 $lang['staff_related_ticket_notification_to_assignee_only'] = 'Send staff-related ticket notifications to the ticket assignee only';
 $lang['staff_related_ticket_notification_to_assignee_only_help'] = 'If this option is set to Yes and the ticket does not have an assignee, notification will be sent to all staff that belongs to the ticket department';

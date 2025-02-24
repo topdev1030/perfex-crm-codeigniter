@@ -24,8 +24,8 @@
               <thead>
                 <tr>
                   <th><?php echo _l('occurrence_datetime'); ?></th>
-                  <th><?php echo _l('post'); ?></th>
-                  <th><?php echo _l('description'); ?></th>
+                  <th><?php echo _l('occurrence_post'); ?></th>
+                  <th><?php echo _l('occurrence_description'); ?></th>
                   <th><?php echo _l('status'); ?></th>
                   <th><?php echo _l('created_by'); ?></th>
                   <th><?php echo _l('options'); ?></th>

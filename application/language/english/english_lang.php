@@ -4063,6 +4063,7 @@ $lang['occurrences_list'] = 'Incident Records';
 $lang['occurrence'] = 'Incident';
 $lang['occurrence_lowercase'] = 'incident';
 $lang['new_occurrence'] = 'New Incident Record';
+$lang['occurrence_post'] = 'Post';
 $lang['occurrence_datetime'] = 'Date/Time';
 $lang['service_post'] = 'Service Post';
 $lang['involved_staff'] = 'Involved Staff';
