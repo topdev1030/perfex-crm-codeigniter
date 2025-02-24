@@ -12,9 +12,13 @@ class Weapons_model extends App_Model
   {
     if ($id) {
       $this->db->where('id', $id);
-      return $this->db->get(db_prefix() . 'regulation_weapons')->row();
+      $result = $this->db->get(db_prefix() . 'regulation_weapons')->row();
+      // print_r($result); // Debugging
+      return $result;
     }
-    return $this->db->get(db_prefix() . 'regulation_weapons')->result_array();
+    $result = $this->db->get(db_prefix() . 'regulation_weapons')->result_array();
+    // print_r($result); // Debugging
+    return $result;
   }
 
   public function add($data)

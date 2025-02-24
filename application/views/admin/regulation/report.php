@@ -26,17 +26,10 @@
                     ['id' => 'processes', 'name' => 'Processes']
                   ], ['id', 'name'], 'item_type'); ?>
                 </div>
-                <div class="col-md-12">
-                  <button type="submit" class="btn btn-primary"><?php echo _l('filter'); ?></button>
-                  <button type="submit" name="export_pdf"
-                    class="btn btn-danger"><?php echo _l('export_pdf'); ?></button>
-                  <button type="submit" name="export_excel"
-                    class="btn btn-success"><?php echo _l('export_excel'); ?></button>
-                </div>
               </div>
             </form>
 
-            <div id="chart-container" style="height: 400px; margin-top: 20px;">
+            <div id="chart-container" style="height: 400px; margin-top: 30px; margin-bottom: 30px;">
               <canvas id="itemsGraph"></canvas>
             </div>
 
@@ -44,7 +37,7 @@
             <table class="table dt-table" id="report_table">
               <thead>
                 <tr>
-                  <th><?php echo _l('item_name'); ?></th>
+                  <th><?php echo _l(line: 'item_name'); ?></th>
                   <th><?php echo _l('service_post'); ?></th>
                   <th><?php echo _l('expiration_date'); ?></th>
                   <th><?php echo _l('item_type'); ?></th>

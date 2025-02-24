@@ -714,6 +714,7 @@ class Regulation extends AdminController
     }
 
     $data['title'] = _l('weapons_list');
+    $data['weapons'] = $this->weapons_model->get();
     $this->load->view('admin/regulation/weapons_list', $data);
   }
 

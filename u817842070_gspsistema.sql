@@ -3555,36 +3555,45 @@ CREATE INDEX idx_weapon_license_expiry ON tblregulation_weapons(license_expiry);
 CREATE INDEX idx_weapon_type ON tblregulation_weapons(type);
 
 -- SELECT staffid, firstname, lastname FROM tblstaff;
--- SET @staff_id = (SELECT staffid FROM tblstaff LIMIT 1);
+SET @staff_id = (SELECT staffid FROM tblstaff LIMIT 1);
 
--- -- Weapon list seed data
--- INSERT INTO `tblregulation_weapons` 
--- (`serial_number`, `type`, `model`, `caliber`, `manufacturer`, `registration_number`, 
--- `license_number`, `license_expiry`, `acquisition_date`, `last_maintenance`, 
--- `next_maintenance`, `status`, `assigned_to`, `assigned_date`, `notes`, `created_by`, `created_at`) 
--- VALUES 
--- -- Pistols
--- ('P2023001', 'Pistol', 'G2C', '9mm', 'Taurus', 'REG001', 'LIC001', 
--- '2024-12-31', '2023-01-15', '2023-11-01', '2024-05-01', 'active', 1, 
--- '2023-01-15', 'Standard issue sidearm', 1, NOW()),
+-- Weapon list seed data
+INSERT INTO `tblregulation_weapons` (
+    `serial_number`, `type`, `model`, `caliber`, 
+    `manufacturer`, `registration_number`, `license_number`, 
+    `license_expiry`, `acquisition_date`, `last_maintenance`, 
+    `next_maintenance`, `status`, `assigned_to`, 
+    `assigned_date`, `notes`, `created_by`
+) VALUES
+('SN1234567890', 'pistol', 'Glock 19', '9mm', 
+ 'Glock Inc.', 'REG1234', 'LIC1234', 
+ '2025-12-31', '2022-01-15', '2023-06-10', 
+ '2024-06-10', 'active', 2, 
+ '2023-01-05', 'Routine check completed', 1),
 
--- ('P2023002', 'Pistol', 'PT100', '.40', 'Taurus', 'REG002', 'LIC002', 
--- '2024-12-31', '2023-02-20', '2023-10-15', '2024-04-15', 'active', 2, 
--- '2023-02-20', 'Backup weapon', 1, NOW()),
+('SN0987654321', 'revolver', 'Smith & Wesson Model 29', '.44 Magnum', 
+ 'Smith & Wesson', 'REG5678', 'LIC5678', 
+ '2024-11-30', '2021-03-11', '2023-02-25', 
+ '2024-02-25', 'maintenance', NULL, 
+ NULL, 'Awaiting part replacement', 1),
 
--- -- Revolvers
--- ('R2023001', 'Revolver', '627', '.38', 'Taurus', 'REG003', 'LIC003', 
--- '2024-11-30', '2023-03-10', '2023-09-01', '2024-03-01', 'maintenance', NULL, 
--- NULL, 'Under maintenance', 1, NOW()),
+('SN1122334455', 'shotgun', 'Mossberg 500', '12 gauge', 
+ 'O.F. Mossberg & Sons', 'REG9101', 'LIC9101', 
+ '2026-07-14', '2022-06-08', '2023-08-20', 
+ '2024-08-20', 'assigned', 1, 
+ '2023-04-10', NULL, 1),
 
--- ('R2023002', 'Revolver', '889', '.38', 'Taurus', 'REG004', 'LIC004', 
--- '2024-10-31', '2023-04-05', '2023-11-15', '2024-05-15', 'inactive', NULL, 
--- NULL, 'Reserved for training', 1, NOW()),
+('SN9988776655', 'rifle', 'Remington 700', '.308 Winchester', 
+ 'Remington Arms', 'REG1213', 'LIC1213', 
+ '2024-09-18', '2020-04-22', '2023-07-15', 
+ '2024-07-15', 'inactive', NULL, 
+ NULL, 'Decommissioned for parts', 2),
 
--- -- Special Weapons
--- ('S2023001', 'Shotgun', 'ST12', '12GA', 'CBC', 'REG005', 'LIC005', 
--- '2024-09-30', '2023-05-20', '2023-12-01', '2024-06-01', 'assigned', 3, 
--- '2023-05-20', 'Vehicle patrol unit', 1, NOW());
+('SN9988776655', 'rifle', 'Remington 700', '.308 Winchester', 
+ 'Remington Arms', 'REG1213', 'LIC1213', 
+ '2024-09-18', '2020-04-22', '2023-07-15', 
+ '2024-07-15', 'inactive', NULL, 
+ NULL, 'Decommissioned for parts', 2);
 
 -- Vests Table
 CREATE TABLE `tblregulation_vests` (

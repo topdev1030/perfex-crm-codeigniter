@@ -30,6 +30,31 @@
                 </tr>
               </thead>
               <tbody>
+                <?php foreach ($weapons as $weapon) { ?>
+                  <tr>
+                    <td><?php echo $weapon['id']; ?></td>
+                    <td><?php echo $weapon['serial_number']; ?></td>
+                    <td><?php echo $weapon['type']; ?></td>
+                    <td><?php echo $weapon['model']; ?></td>
+                    <td><?php echo $weapon['caliber']; ?></td>
+                    <td><?php echo $weapon['license_expiry']; ?></td>
+                    <td><?php echo $weapon['status']; ?></td>
+                    <td>
+                      <!-- Action buttons -->
+                      <div class="btn-group">
+                        <a href="#" class="btn btn-default btn-icon"><i class="fa fa-eye"></i></a>
+                        <?php if (has_permission('regulation', '', 'edit')) { ?>
+                          <a href="#" onclick="edit_weapon(<?php echo $weapon['id']; ?>); return false;"
+                            class="btn btn-default btn-icon"><i class="fa fa-pencil"></i></a>
+                        <?php } ?>
+                        <?php if (has_permission('regulation', '', 'delete')) { ?>
+                          <a href="<?php echo admin_url('regulation/delete_weapon/' . $weapon['id']); ?>"
+                            class="btn btn-danger btn-icon _delete"><i class="fa fa-remove"></i></a>
+                        <?php } ?>
+                      </div>
+                    </td>
+                  </tr>
+                <?php } ?>
               </tbody>
             </table>
           </div>
@@ -66,13 +91,6 @@
             <?php echo render_date_input('acquisition_date', 'acquisition_date'); ?>
             <?php echo render_date_input('last_maintenance', 'last_maintenance'); ?>
             <?php echo render_date_input('next_maintenance', 'next_maintenance'); ?>
-            <?php echo render_select('status', [
-              ['id' => 'active', 'name' => _l('active')],
-              ['id' => 'inactive', 'name' => _l('inactive')],
-              ['id' => 'maintenance', 'name' => _l('maintenance')],
-              ['id' => 'assigned', 'name' => _l('assigned')]
-            ], 'id', 'name', '', [], [], 'status'); ?>
-            <?php echo render_select('assigned_to', $staff_members, ['staffid', ['firstname', 'lastname']], 'assigned_to'); ?>
             <?php echo render_date_input('assigned_date', 'assigned_date'); ?>
             <?php echo render_textarea('notes', 'notes'); ?>
           </div>
@@ -145,6 +163,7 @@
 
     requestGet('regulation/weapon/' + id).done(function (response) {
       response = JSON.parse(response);
+      console.log("response: ", response)
       $('#weapon-form').find('[name="serial_number"]').val(response.serial_number);
       $('#weapon-form').find('[name="type"]').val(response.type);
       $('#weapon-form').find('[name="model"]').val(response.model);
