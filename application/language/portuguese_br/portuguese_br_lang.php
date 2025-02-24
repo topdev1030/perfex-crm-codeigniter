@@ -292,6 +292,8 @@ $lang['service_post'] = 'Posto de Serviço';
 $lang['registration_expiry'] = 'Expiração do registro';
 $lang['model'] = 'Modelo';
 $lang['no_vehicles_found'] = 'Nenhum veículo encontrado';
+$lang['go_to_fleet_module'] = 'Ir para a lista de veículos';
+$lang['using_fleet_module'] = 'Você está usando o módulo de gerenciamento de veículos.';
 
 // Regulation reports
 $lang['regulation_report'] = 'Relatório de Regulamentação';

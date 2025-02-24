@@ -531,8 +531,8 @@ class Regulation extends AdminController
     $data['is_fleet_active'] = is_fleet_module_active();
 
     if ($data['is_fleet_active']) {
-      $this->load->model('fleet/fleet_model');
-      $data['fleet_vehicles'] = $this->fleet_model->get_vehicles();
+      $this->load->model('vehicles_model');
+      $data['fleet_vehicles'] = $this->vehicles_model->get_all_vehicles();
     }
 
     $this->load->view('admin/regulation/vehicles_list', $data);

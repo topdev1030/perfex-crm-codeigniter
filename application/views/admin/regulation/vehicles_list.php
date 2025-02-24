@@ -13,7 +13,7 @@
               <!-- Fleet Module Integration -->
               <div class="alert alert-info">
                 <?php echo _l('using_fleet_module'); ?>
-                <a href="<?php echo admin_url('fleet/vehicles'); ?>" class="alert-link">
+                <a href="<?php echo admin_url('regulation/vehicles_list'); ?>" class="alert-link">
                   <?php echo _l('go_to_fleet_module'); ?>
                 </a>
               </div>
@@ -41,7 +41,7 @@
                       </td>
                       <td><?php echo $vehicle->assigned_to_name; ?></td>
                       <td>
-                        <a href="<?php echo admin_url('fleet/vehicle/' . $vehicle->id); ?>"
+                        <a href="<?php echo admin_url('regulation/vehicle/' . $vehicle->id); ?>"
                           class="btn btn-default btn-icon">
                           <i class="fa fa-pencil"></i>
                         </a>
@@ -135,9 +135,7 @@
                 ['id' => 'inactive', 'name' => _l('inactive')],
                 ['id' => 'maintenance', 'name' => _l('maintenance')],
                 ['id' => 'assigned', 'name' => _l('assigned')]
-              ], 'id', 'name', '', [], [], 'status'); ?>
-              <?php echo render_select('assigned_to', $staff_members, ['staffid', ['firstname', 'lastname']], 'assigned_to'); ?>
-              <?php echo render_textarea('notes', 'notes'); ?>
+              ], ['id', 'name'], 'status', '', [], [], 'status'); ?>
             </div>
           </div>
         </div>
