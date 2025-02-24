@@ -3746,6 +3746,23 @@ CREATE TABLE `tblregulation_item_post_links` (
     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Service Stations Table
+CREATE TABLE `tblservice_stations` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `contract` INT(11) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `items` TEXT,
+  PRIMARY KEY (`id`)
+);
+
+INSERT INTO `tblservice_stations` (`name`, `contract`, `address`, `items`) VALUES
+('Green Valley Service Station', 101, '123 Green St, Springfield', 'Oil Change, Tire Rotation, Brake Inspection'),
+('Sunset Auto Care', 102, '456 Sunset Blvd, Metropolis', 'Battery Replacement, Transmission Check, AC Service'),
+('Downtown Garage', 103, '789 Main Ave, Capital City', 'Engine Diagnostics, Spark Plug Replacement, Wheel Alignment'),
+('Rapid Repairs', 104, '321 Elm St, Gotham', 'Tire Repair, Oil Filter Replacement, Coolant Flush'),
+('Corner Mechanical Shop', 105, '654 Oak Rd, Star City', 'Exhaust Repair, Fuel System Cleaning, Headlight Restoration');
+
 -- FixedAssets model
 CREATE TABLE `tblfixedassets` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,

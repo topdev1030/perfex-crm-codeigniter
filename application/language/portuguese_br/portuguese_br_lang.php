@@ -295,6 +295,17 @@ $lang['no_vehicles_found'] = 'Nenhum veículo encontrado';
 $lang['go_to_fleet_module'] = 'Ir para a lista de veículos';
 $lang['using_fleet_module'] = 'Você está usando o módulo de gerenciamento de veículos.';
 
+// Service Stations
+$lang['service_stations'] = 'Estações de Serviço';
+$lang['new_station'] = 'Nova Estação';
+$lang['station_name'] = 'Nome da Estação';
+$lang['contract'] = 'Contrato';
+$lang['address'] = 'Endereço';
+$lang['items'] = 'Itens';
+$lang['submit'] = 'Enviar';
+$lang['add_new_station'] = 'Adicionar Nova Estação';
+$lang['edit_station'] = 'Editar Estação';
+
 // Regulation reports
 $lang['regulation_report'] = 'Relatório de Regulamentação';
 $lang['service_post'] = 'Posto de Serviço';

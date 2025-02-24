@@ -4124,6 +4124,17 @@ $lang['registered'] = 'Registered';
 $lang['under_investigation'] = 'Under Investigation';
 $lang['completed'] = 'Completed';
 
+// Service Stations
+$lang['service_stations'] = 'Service Stations';
+$lang['new_station'] = 'New Station';
+$lang['station_name'] = 'Station Name';
+$lang['contract'] = 'Contract';
+$lang['address'] = 'Address';
+$lang['items'] = 'Items';
+$lang['submit'] = 'Submit';
+$lang['add_new_station'] = 'Add New Station';
+$lang['edit_station'] = 'Edit Station';
+
 // Diagnostics
 $lang['als_diagnostics_submenu'] = 'Diagnostics';
 $lang['expiring_items'] = 'Expiring Items';
@@ -4134,6 +4145,17 @@ $lang['pending_processes'] = 'Pending Processes';
 $lang['delayed_processes'] = 'Delayed Processes';
 $lang['days_overdue'] = 'Days Overdue';
 $lang['recent_occurrences'] = 'Recent Occurrences';
+// Diagnostics
+$lang['diagnostics'] = 'Diagnostics';
+$lang['expired_items'] = 'Expired Items';
+$lang['pending_processes'] = 'Pending Processes';
+$lang['item_name'] = 'Item Name';
+$lang['expiration_date'] = 'Expiration Date';
+$lang['item_type'] = 'Item Type';
+$lang['process_type'] = 'Process Type';
+$lang['start_date'] = 'Start Date';
+$lang['expected_date'] = 'Expected Date';
+$lang['status'] = 'Status';
 
 // Reports
 $lang['regulation_report'] = 'Regulation Report';
@@ -4154,14 +4176,3 @@ $lang['cnv'] = 'CNV';
 $lang['other'] = 'Other';
 $lang['expiring_items'] = 'Expiring Items';
 
-// Diagnostics
-$lang['diagnostics'] = 'Diagnostics';
-$lang['expired_items'] = 'Expired Items';
-$lang['pending_processes'] = 'Pending Processes';
-$lang['item_name'] = 'Item Name';
-$lang['expiration_date'] = 'Expiration Date';
-$lang['item_type'] = 'Item Type';
-$lang['process_type'] = 'Process Type';
-$lang['start_date'] = 'Start Date';
-$lang['expected_date'] = 'Expected Date';
-$lang['status'] = 'Status';
