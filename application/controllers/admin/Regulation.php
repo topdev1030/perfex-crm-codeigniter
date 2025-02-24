@@ -520,13 +520,19 @@ class Regulation extends AdminController
       access_denied('regulation');
     }
 
+    $this->load->model('vehicles_model');
+    $data['vehicles'] = $this->vehicles_model->get_all_vehicles();
+    if (empty($data['vehicles'])) {
+      log_message('error', 'No vehicles data passed to the view.');
+    } else {
+      log_message('info', 'Vehicles data passed to the view: ' . print_r($data['vehicles'], true));
+    }
     $data['title'] = _l('vehicles_list');
     $data['is_fleet_active'] = is_fleet_module_active();
 
     if ($data['is_fleet_active']) {
-      // Load Fleet module data
-      $this->load->model('vehicles_model');
-      $data['fleet_vehicles'] = $this->vehicles_model->get_vehicles();
+      $this->load->model('fleet/fleet_model');
+      $data['fleet_vehicles'] = $this->fleet_model->get_vehicles();
     }
 
     $this->load->view('admin/regulation/vehicles_list', $data);

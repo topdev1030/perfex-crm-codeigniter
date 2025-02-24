@@ -19,8 +19,14 @@ class Vehicles_model extends App_Model
     $this->db->from('tblfixedassets');
     $this->db->join('tblregulation_item_post_links', 'tblfixedassets.id = tblregulation_item_post_links.item_id AND tblregulation_item_post_links.item_type = "vehicle" AND tblregulation_item_post_links.status = "active"', 'left');
     $this->db->join('tblregulation_posts', 'tblregulation_posts.id = tblregulation_item_post_links.post_id', 'left');
-    $this->db->where('tblfixedassets.category', 'vehicle'); // Assuming you have a category field
-    return $this->db->get()->result_array();
+    $this->db->where('tblfixedassets.category', 'vehicle');
+    $result = $this->db->get()->result_array();
+    if (empty($result)) {
+      log_message('error', 'No vehicles found in the database.');
+    } else {
+      log_message('info', 'Vehicles fetched: ' . print_r($result, true));
+    }
+    return $result;
   }
 
   /**

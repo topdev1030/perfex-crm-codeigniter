@@ -4058,6 +4058,7 @@ $lang['occurrence_created_by'] = 'Created By';
 $lang['occurrence_status_registered'] = 'Registered';
 $lang['occurrence_status_under_investigation'] = 'Under Investigation';
 $lang['occurrence_status_completed'] = 'Completed';
+
 // Add Occurences strings
 $lang['occurrences_list'] = 'Incident Records';
 $lang['occurrence'] = 'Incident';
@@ -4107,6 +4108,7 @@ $lang['plate_number'] = 'Plate Number';
 $lang['model'] = 'Model';
 $lang['type'] = 'Type';
 $lang['registration_expiry'] = 'Registration Expiry';
+$lang['no_vehicles_found'] = 'No vehicles found';
 
 // Add Occurences strings
 $lang['occurrences_list'] = 'Incident Records';

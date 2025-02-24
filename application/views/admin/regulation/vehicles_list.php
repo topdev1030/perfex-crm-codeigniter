@@ -73,7 +73,30 @@
                     <th><?php echo _l('options'); ?></th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  <?php if (!empty($vehicles)) { ?>
+                    <?php foreach ($vehicles as $vehicle) { ?>
+                      <tr>
+                        <td><?php echo $vehicle['plate_number']; ?></td>
+                        <td><?php echo $vehicle['model']; ?></td>
+                        <td><?php echo $vehicle['type']; ?></td>
+                        <td><?php echo $vehicle['registration_expiry']; ?></td>
+                        <td><?php echo $vehicle['status']; ?></td>
+                        <td><?php echo $vehicle['assigned_to']; ?></td>
+                        <td>
+                          <a href="<?php echo admin_url('regulation/vehicle/' . $vehicle['id']); ?>"
+                            class="btn btn-default btn-icon">
+                            <i class="fa fa-pencil"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    <?php } ?>
+                  <?php } else { ?>
+                    <tr>
+                      <td colspan="7"><?php echo _l('no_vehicles_found'); ?></td>
+                    </tr>
+                  <?php } ?>
+                </tbody>
               </table>
             <?php } ?>
           </div>

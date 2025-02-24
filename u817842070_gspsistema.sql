@@ -3746,6 +3746,18 @@ CREATE TABLE `tblregulation_item_post_links` (
     `updated_at` timestamp NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- FixedAssets model
+CREATE TABLE `tblfixedassets` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `category` VARCHAR(255) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `model` VARCHAR(255) NOT NULL,
+  `type` VARCHAR(255) NOT NULL,
+  `status` VARCHAR(50) NOT NULL,
+  `assigned_to` INT(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `tblstaff_cnv` (
     `id` int PRIMARY KEY AUTO_INCREMENT,
     `staff_id` int NOT NULL,

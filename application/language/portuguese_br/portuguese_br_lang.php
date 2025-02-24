@@ -291,6 +291,7 @@ $lang['select_post'] = 'Selecionar Posto';
 $lang['service_post'] = 'Posto de Serviço';
 $lang['registration_expiry'] = 'Expiração do registro';
 $lang['model'] = 'Modelo';
+$lang['no_vehicles_found'] = 'Nenhum veículo encontrado';
 
 // Regulation reports
 $lang['regulation_report'] = 'Relatório de Regulamentação';
