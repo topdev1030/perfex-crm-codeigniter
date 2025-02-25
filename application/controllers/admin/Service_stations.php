@@ -21,12 +21,22 @@ class Service_stations extends AdminController
   {
     if ($this->input->post()) {
       $data = $this->input->post();
+      $data['items'] = implode(',', $data['items']); // Convert items array to string
+
       if ($id == '') {
         $id = $this->service_station_model->add_station($data);
-        set_alert('success', _l('added_successfully', _l('service_station')));
+        if ($id) {
+          set_alert('success', _l('added_successfully', _l('service_station')));
+        } else {
+          set_alert('danger', _l('problem_adding', _l('service_station')));
+        }
       } else {
-        $this->service_station_model->update_station($data, $id);
-        set_alert('success', _l('updated_successfully', _l('service_station')));
+        $success = $this->service_station_model->update_station($data, $id);
+        if ($success) {
+          set_alert('success', _l('updated_successfully', _l('service_station')));
+        } else {
+          set_alert('danger', _l('problem_updating', _l('service_station')));
+        }
       }
       redirect(admin_url('service_stations'));
     }

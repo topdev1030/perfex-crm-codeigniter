@@ -17,7 +17,7 @@
           <select class="form-control selectpicker" name="contract" required>
             <?php foreach ($contracts as $contract) { ?>
               <option value="<?php echo $contract['id']; ?>" <?php echo isset($station) && $station['contract'] == $contract['id'] ? 'selected' : ''; ?>>
-                <?php echo $contract['name']; ?>
+                <?php echo $contract['client']; ?>
               </option>
             <?php } ?>
           </select>
@@ -32,7 +32,7 @@
           <select class="form-control selectpicker" name="items[]" multiple>
             <?php foreach ($items as $item) { ?>
               <option value="<?php echo $item['id']; ?>" <?php echo isset($station) && in_array($item['id'], explode(',', $station['items'])) ? 'selected' : ''; ?>>
-                <?php echo $item['name']; ?>
+                <?php echo $item['id']; ?>
               </option>
             <?php } ?>
           </select>

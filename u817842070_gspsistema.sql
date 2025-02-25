@@ -180,6 +180,13 @@ CREATE TABLE `tblcontacts` (
   `ticket_emails` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- contacts table seed data
+INSERT INTO `tblcontracts` (`id`, `content`, `description`, `subject`, `client`, `datestart`, `dateend`, `contract_type`, `project_id`, `addedfrom`, `dateadded`, `isexpirynotified`, `contract_value`, `trash`, `not_visible_to_client`, `hash`, `signed`, `signature`, `marked_as_signed`, `acceptance_firstname`, `acceptance_lastname`, `acceptance_email`, `acceptance_date`, `acceptance_ip`, `short_link`, `last_sent_at`, `contacts_sent_to`, `last_sign_reminder_at`) VALUES
+(4, 'Full service agreement content...', 'Annual software maintenance contract', 'Software Maintenance', 201, '2023-01-15', '2024-01-14', 3, 501, 301, '2023-01-10 09:00:00', 0, 15000.00, 0, 0, NULL, 0, NULL, 0, 'John', 'Doe', 'john.doe@example.com', '2023-01-12 14:30:00', '192.168.1.100', 'https://example.com/contract/1', '2023-01-11 09:00:00', NULL, '2023-01-13 10:00:00'),
+(5, 'Comprehensive service plan...', 'Three-year cloud hosting agreement', 'Cloud Hosting', 202, '2022-06-01', '2025-05-31', 5, 502, 302, '2022-05-25 11:00:00', 1, 45000.00, 0, 1, NULL, 1, 'SIG1234567890', 1, 'Jane', 'Smith', 'jane.smith@example.com', '2022-05-28 16:00:00', '192.168.1.101', 'https://example.com/contract/2', '2022-05-26 10:00:00', NULL, '2022-06-01 08:00:00'),
+(6, 'Lease agreement for office space...', 'Two-year lease for office premises', 'Office Lease', 203, '2023-03-01', '2025-02-28', 6, 503, 303, '2023-02-20 10:30:00', 0, 80000.00, 0, 0, NULL, 0, NULL, 0, 'Michael', 'Brown', 'michael.brown@example.com', '2023-02-25 12:00:00', '192.168.1.102', 'https://example.com/contract/3', '2023-02-21 11:00:00', NULL, '2023-02-28 09:00:00');
+
+
 -- --------------------------------------------------------
 
 --
